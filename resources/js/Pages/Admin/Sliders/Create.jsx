@@ -50,18 +50,7 @@ export default function SlidersCreate() {
                         {errors.description && <p style={{ margin: '4px 0 0', fontSize: '12px', color: '#dc2626' }}>{errors.description}</p>}
                     </div>
 
-                    <div style={{ marginBottom: '20px', display: 'flex', gap: '16px' }}>
-                        <div style={{ flex: 1 }}>
-                            <label style={{ display: 'block', marginBottom: '6px', fontSize: '13px', fontWeight: 600, color: '#374151' }}>Button Text</label>
-                            <input type="text" value={data.btn_text} onChange={(e) => setData('btn_text', e.target.value)} style={{ width: '100%', padding: '10px 14px', border: errors.btn_text ? '1.5px solid #dc2626' : '1px solid #d1d5db', borderRadius: '8px', fontSize: '14px', color: '#111827', outline: 'none', boxSizing: 'border-box' }} onFocus={(e) => { if (!errors.btn_text) e.target.style.borderColor = '#008ed2'; }} onBlur={(e) => { if (!errors.btn_text) e.target.style.borderColor = '#d1d5db'; }} placeholder="e.g. Explore Courses" />
-                            {errors.btn_text && <p style={{ margin: '4px 0 0', fontSize: '12px', color: '#dc2626' }}>{errors.btn_text}</p>}
-                        </div>
-                        <div style={{ flex: 1 }}>
-                            <label style={{ display: 'block', marginBottom: '6px', fontSize: '13px', fontWeight: 600, color: '#374151' }}>Button Link</label>
-                            <input type="text" value={data.btn_link} onChange={(e) => setData('btn_link', e.target.value)} style={{ width: '100%', padding: '10px 14px', border: errors.btn_link ? '1.5px solid #dc2626' : '1px solid #d1d5db', borderRadius: '8px', fontSize: '14px', color: '#111827', outline: 'none', boxSizing: 'border-box' }} onFocus={(e) => { if (!errors.btn_link) e.target.style.borderColor = '#008ed2'; }} onBlur={(e) => { if (!errors.btn_link) e.target.style.borderColor = '#d1d5db'; }} placeholder="e.g. /coursedetails" />
-                            {errors.btn_link && <p style={{ margin: '4px 0 0', fontSize: '12px', color: '#dc2626' }}>{errors.btn_link}</p>}
-                        </div>
-                    </div>
+
 
                     <div style={{ marginBottom: '20px' }}>
                         <label style={{ display: 'block', marginBottom: '6px', fontSize: '13px', fontWeight: 600, color: '#374151' }}>Background Image</label>

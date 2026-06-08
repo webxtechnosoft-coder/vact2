@@ -97,18 +97,7 @@ export default function CompanyEdit({ contents }) {
                         </div>
                     </div>
 
-                    <h3 style={{ margin: '24px 0 16px', fontSize: '15px', fontWeight: 700, color: '#374151', borderBottom: '1px solid #e5e7eb', paddingBottom: '8px' }}>Buttons & Links</h3>
 
-                    <div style={{ marginBottom: '16px', display: 'flex', gap: '12px' }}>
-                        <div style={{ flex: 1 }}>
-                            <label style={{ display: 'block', marginBottom: '4px', fontSize: '12px', fontWeight: 600, color: '#374151' }}>Button Text</label>
-                            <input type="text" value={sec.btn_text} onChange={(e) => upd('btn_text', e.target.value)} style={{ width: '100%', padding: '8px 12px', border: '1px solid #d1d5db', borderRadius: '6px', fontSize: '14px', boxSizing: 'border-box' }} />
-                        </div>
-                        <div style={{ flex: 1 }}>
-                            <label style={{ display: 'block', marginBottom: '4px', fontSize: '12px', fontWeight: 600, color: '#374151' }}>Button Link</label>
-                            <input type="text" value={sec.btn_link} onChange={(e) => upd('btn_link', e.target.value)} style={{ width: '100%', padding: '8px 12px', border: '1px solid #d1d5db', borderRadius: '6px', fontSize: '14px', boxSizing: 'border-box' }} />
-                        </div>
-                    </div>
 
                     <div style={{ marginBottom: '16px' }}>
                         <label style={{ display: 'block', marginBottom: '4px', fontSize: '12px', fontWeight: 600, color: '#374151' }}>Video URL</label>
