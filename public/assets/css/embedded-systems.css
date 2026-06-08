@@ -1,0 +1,458 @@
+/* Embedded Systems Section Styles */
+.embedded-systems-section {
+  
+    padding: 60px 0;
+}
+
+/* Outer Card Container */
+.embedded-card {
+  
+    margin-bottom: 30px;
+    overflow: hidden;
+}
+
+/* Badges */
+.embedded-badge {
+    background-color: #eff4ff;
+    color: #0b5ed7;
+    font-weight: 600;
+    border-radius: 30px;
+    font-size: 13px;
+    display: inline-flex;
+    align-items: center;
+    padding: 8px 18px;
+    margin-bottom: 20px;
+    letter-spacing: 0.2px;
+}
+
+/* Titles and Typography */
+.embedded-title {
+    color: #0b1c3f;
+    font-weight: 800;
+    font-size: 34px;
+    line-height: 1.25;
+    margin-bottom: 18px;
+    letter-spacing: -0.5px;
+}
+
+.embedded-subtitle {
+    color: #0b1c3f;
+    font-weight: 700;
+    font-size: 15px;
+    line-height: 1.5;
+    margin-bottom: 15px;
+}
+
+.embedded-desc {
+    color: #5c677d;
+    font-size: 14px;
+    line-height: 1.75;
+    margin-bottom: 24px;
+}
+
+/* List Style - directly on card, no outer border */
+.embedded-list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.embedded-list-item {
+    display: flex;
+    align-items: center;
+    padding: 14px 0;
+    border-bottom: 1px solid #f1f5f9;
+}
+
+.embedded-list-item:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+}
+
+.embedded-list-item:first-child {
+    padding-top: 0;
+}
+
+.embedded-icon-box {
+    width: 36px;
+    height: 36px;
+    background-color: #0b5ed7;
+    color: #ffffff;
+    font-size: 14px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    margin-right: 16px;
+}
+
+.embedded-list-text {
+    color: #334155;
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 1.4;
+}
+
+/* Card 1 Right Image */
+.embedded-img-large {
+    width: 100%;
+    height: auto;
+    border-radius: 16px;
+    object-fit: cover;
+}
+
+/* Card 2 Layout adjustments */
+.embedded-img-medium {
+    max-width: 100%;
+    height: auto;
+    object-fit: contain;
+}
+
+/* Right-side list card in Card 2 */
+.hmi-list-box {
+    background-color: #ffffff;
+    border: 1px solid #f1f5f9;
+    border-radius: 20px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.03);
+    padding: 24px 20px;
+}
+
+.hmi-list-box .embedded-list-item {
+    padding: 15px 0;
+}
+
+.hmi-list-box .embedded-list-item:first-child {
+    padding-top: 0;
+}
+
+.hmi-list-box .embedded-list-item:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+}
+
+.hmi-list-text {
+    color: #334155;
+    font-size: 13.5px;
+    font-weight: 500;
+    line-height: 1.45;
+}
+
+/* Feature Borders */
+.feature-border-right {
+    border-right: 1px solid #eaedf3;
+}
+
+@media (max-width: 991px) {
+    .feature-border-right {
+        border-right: none;
+        border-bottom: 1px solid #eaedf3;
+        padding-bottom: 20px;
+        margin-bottom: 20px;
+    }
+
+    .feature-last-item {
+        border-bottom: none !important;
+        padding-bottom: 0 !important;
+        margin-bottom: 0 !important;
+    }
+}
+
+/* ==========================================================================
+   Last Mile Services Section Styles
+   ========================================================================== */
+
+.last-mile-section {
+    background-color: #f8fafc;
+    padding: 60px 0;
+    position: relative;
+    overflow: hidden;
+}
+
+.last-mile-badge-v2 {
+    background-color: #eff6ff;
+    color: #3b82f6;
+    font-weight: 700;
+    border-radius: 30px;
+    font-size: 13px;
+    display: inline-flex;
+    align-items: center;
+    padding: 8px 20px;
+    letter-spacing: 0.5px;
+    border: 1px solid #dbeafe;
+}
+
+.last-mile-title-v2 {
+    color: #0b1c3f;
+    font-weight: 800;
+    font-size: 36px;
+    line-height: 1.3;
+    max-width: 800px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.last-mile-subtitle-v2 {
+    font-size: 16px;
+    line-height: 1.6;
+    color: #64748b !important;
+}
+
+/* 3 Feature Cards */
+.last-mile-card-v2 {
+    background: #ffffff;
+    border: 1px solid #eef2f6;
+    border-radius: 16px;
+    padding: 24px 20px;
+    box-shadow: 0 10px 30px rgba(11, 28, 63, 0.02);
+    transition: all 0.3s ease;
+    height: 100%;
+}
+
+.last-mile-card-v2:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 35px rgba(11, 28, 63, 0.05);
+    border-color: #dbeafe;
+}
+
+.last-mile-card-img-box {
+    width: 80px;
+    height: 80px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.last-mile-card-img-box img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+}
+
+.last-mile-card-title-v2 {
+    color: #0b1c3f;
+    font-weight: 700;
+    font-size: 16px;
+    letter-spacing: -0.2px;
+}
+
+.last-mile-card-desc-v2 {
+    font-size: 13px;
+    line-height: 1.5;
+    color: #64748b !important;
+}
+
+/* Bottom Left: Checklist Box */
+.last-mile-list-card-v2 {
+    background: #ffffff;
+    border: 1px solid #eef2f6;
+    border-radius: 16px;
+    padding: 30px;
+    box-shadow: 0 10px 30px rgba(11, 28, 63, 0.02);
+}
+
+.last-mile-list-v2 {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.last-mile-list-item-v2 {
+    display: flex;
+    align-items: flex-start;
+    padding: 16px 0;
+    border-bottom: 1px solid #f1f5f9;
+}
+
+.last-mile-list-item-v2:first-child {
+    padding-top: 0;
+}
+
+.last-mile-list-item-v2:last-child {
+    padding-bottom: 0;
+    border-bottom: none;
+}
+
+.last-mile-list-icon-v2 {
+    color: #3b82f6;
+    font-size: 18px;
+    margin-right: 14px;
+    margin-top: 2px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.last-mile-list-text-v2 {
+    color: #475569;
+    font-size: 14.5px;
+    line-height: 1.5;
+    font-weight: 500;
+}
+
+/* Bottom Right: Image wrapper */
+.last-mile-img-box-v2 {
+    border-radius: 16px;
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+.last-mile-img-box-v2:hover {
+    transform: translateY(-3px);
+}
+
+.last-mile-img-v2 {
+    width: 100%;
+    height: auto;
+    display: block;
+    border-radius: 16px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 991px) {
+    .last-mile-title-v2 {
+        font-size: 28px;
+    }
+    .last-mile-card-v2 {
+        padding: 20px;
+    }
+}
+
+
+/* Last Mile Services CSS */
+
+.last-mile-section {
+  background-color: #f5f7fc;
+}
+
+.lm-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background-color: #dde8fd;
+  color: #1a4ecf;
+  font-size: 13px;
+  font-weight: 500;
+  padding: 6px 18px;
+  border-radius: 999px;
+}
+
+.lm-title {
+  font-size: 28px;
+  font-weight: 700;
+  color: #0d1b3e;
+  line-height: 1.35;
+}
+
+.lm-subtitle {
+  font-size: 15px;
+  color: #6b7280;
+}
+
+/* Feature Cards (top 3) */
+.lm-card {
+  background: #ffffff;
+  border: 1px solid #e8eaf0;
+  border-radius: 14px;
+  padding: 1.25rem 1rem;
+  height: 100%;
+}
+
+.lm-icon-box {
+  width: 72px;
+  height: 72px;
+  min-width: 72px;
+  background-color: #eef2fb;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 30px;
+}
+
+.lm-icon-box img {
+  width: 48px;
+  height: 48px;
+  object-fit: contain;
+}
+
+.lm-card-title {
+  font-size: 15px;
+  font-weight: 600;
+  color: #0d1b3e;
+}
+
+.lm-card-desc {
+  font-size: 13px;
+  color: #6b7280;
+  line-height: 1.5;
+}
+
+/* Checklist Card */
+.lm-list-card {
+  background: #ffffff;
+  border: 1px solid #e8eaf0;
+  border-radius: 14px;
+  padding: 2rem 1.75rem;
+}
+
+.lm-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.lm-list-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.lm-check-icon {
+  width: 26px;
+  height: 26px;
+  min-width: 26px;
+  background-color: #1a4ecf;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 2px;
+}
+
+.lm-check-icon i {
+  color: #ffffff;
+  font-size: 12px;
+}
+
+.lm-list-text {
+  font-size: 14px;
+  color: #4b5563;
+  line-height: 1.6;
+}
+
+/* Illustration Box */
+.lm-img-box {
+  background-color: #e8f0fb;
+  border-radius: 14px;
+  padding: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 280px;
+}
+
+.lm-img-box img {
+  max-height: 280px;
+  object-fit: contain;
+}
+
+
+.card-body{
+    margin-bottom: -50px;
+}

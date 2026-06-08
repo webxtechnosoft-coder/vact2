@@ -1,0 +1,255 @@
+/* About Page Custom Styles */
+
+/* Remove horizontal scroll */
+html, body {
+    overflow-x: hidden;
+    width: 100%;
+    position: relative;
+}
+
+/* Ensure sections don't cause overflow */
+section {
+    overflow: hidden;
+}
+
+/* Specific fix for elements that might cause overflow */
+.page-wrapper {
+    overflow: hidden;
+    width: 100%;
+}
+
+/* Testimonial Section Adjustments */
+.testimonial-one {
+    padding-top: 250px !important; /* Increased to move it down further and clear header */
+}
+
+.testimonial-one__img img {
+    height: 450px !important; /* Uniform height for all images */
+    object-fit: cover;
+    width: 100%;
+    border-radius: var(--eduvers-bdr-radius);
+}
+
+.testimonial-one__left {
+    padding: 40px !important; /* Balanced padding */
+    background-color: var(--eduvers-white) !important;
+    border-radius: var(--eduvers-bdr-radius) !important;
+    box-shadow: 0 15px 45px rgba(0, 0, 0, 0.1) !important;
+    transition: all 0.3s ease !important;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 530px; /* Ensures consistent container height */
+}
+
+.testimonial-one__single {
+    padding: 50px !important; /* Premium consistent padding */
+    background-color: var(--eduvers-white) !important;
+    border-radius: var(--eduvers-bdr-radius) !important;
+    box-shadow: 0 15px 45px rgba(0, 0, 0, 0.1) !important;
+    transition: all 0.3s ease !important;
+    margin-left: 50px; /* Space for vertical dots */
+    position: relative;
+    min-height: 530px; /* Matches the left column height */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.testimonial-one__left:hover,
+.testimonial-one__single:hover {
+    box-shadow: 0 25px 70px rgba(0, 142, 210, 0.15) !important;
+    transform: translateY(-5px);
+}
+
+.testimonial-one__social {
+    position: relative !important;
+    bottom: auto !important;
+    right: auto !important;
+    margin-top: 40px !important; /* Increased margin to move icons further down */
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+}
+
+/* Position dots vertically between columns */
+.testimonial-one__carousel.owl-theme .owl-dots {
+    left: 45% !important; 
+    transform: translate(-50%, -50%) !important;
+    z-index: 99;
+    bottom: 250px;
+}
+
+/* Adjust navigation buttons */
+.testimonial-one__carousel .owl-nav {
+    top: -100px !important;
+    right: 78px !important;
+    position: absolute;
+    display: flex;
+    gap: 10px;
+}
+
+.testimonial-two__carousel.owl-carousel {
+    width: 100%;
+    margin: 0;
+}
+
+/* Feature Cards Styling - Compact Micro-Cards */
+.vact-feature-card {
+    position: relative;
+    background: #fff;
+    padding: 8px 15px;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.02);
+    border: 1px solid #f1f5f9;
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+    transition: all 0.3s ease;
+}
+
+.vact-feature-card:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+    border-color: #008ed2;
+}
+
+.vact-feature-card .icon-box {
+    width: 28px;
+    height: 28px;
+    background: #e0f7fa;
+    border: 1px solid #008ed2;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 12px;
+    flex-shrink: 0;
+}
+
+.vact-feature-card .icon-box span {
+    font-size: 11px;
+    color: #008ed2;
+    font-weight: 900;
+}
+
+.vact-feature-card .text-box p {
+    margin: 0;
+    font-size: 12px;
+    line-height: 1.3;
+    font-weight: 500;
+    color: #334155;
+}
+
+/* Vision/Mission Cards Section - Modernized to match reference image */
+.vact-vms-section {
+    padding: 80px 0;
+    background: #f8fbff;
+    position: relative;
+    margin-top: -100px;
+    z-index: 10;
+}
+
+.vms-modern-wrap {
+    position: relative;
+    padding-left: 20px;
+    padding-bottom: 20px;
+    height: 100%;
+}
+
+.vms-modern-wrap::before {
+    content: '';
+    position: absolute;
+    top: 20px;
+    left: 0;
+    right: 20px;
+    bottom: 0;
+    background-color: #008ed2;
+    border-radius: 20px;
+    z-index: 1;
+    transition: transform 0.4s cubic-bezier(0.25, 0.8, 0.25, 1), background-color 0.4s ease;
+}
+
+.vms-modern-card {
+    background: #ffffff;
+    border-radius: 16px;
+    padding: 35px 30px;
+    position: relative;
+    z-index: 2;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.04);
+    height: 100%;
+    border: 1px solid rgba(0, 0, 0, 0.06);
+    display: flex;
+    flex-direction: column;
+    transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+/* Custom Interactive Animations */
+.vms-modern-wrap:hover .vms-modern-card {
+    transform: translateY(-10px);
+    box-shadow: 0 20px 45px rgba(0, 142, 210, 0.15);
+    border-color: rgba(0, 142, 210, 0.18);
+}
+
+.vms-modern-wrap:hover::before {
+    transform: translate(-6px, 6px);
+    background-color: #0076b0; /* Accent color shifts on hover */
+}
+
+.vms-modern-card .icon-box {
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+}
+
+.vms-modern-card .icon-box span {
+    font-size: 55px;
+    color: #008ed2;
+    line-height: 1;
+    display: inline-block;
+    transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), color 0.4s ease;
+}
+
+.vms-modern-wrap:hover .vms-modern-card .icon-box span {
+    transform: scale(1.18) rotate(8deg);
+    color: #0076b0;
+}
+
+.vms-modern-card .title {
+    font-size: 26px;
+    font-weight: 700;
+    color: #2b3d4f;
+    margin-bottom: 12px;
+}
+
+.vms-modern-card .text {
+    font-size: 15px;
+    color: #4e5a65;
+    line-height: 1.65;
+    margin: 0;
+}
+
+/* Fix Director Image Size */
+.about-one__bg {
+    background-size: auto 100% !important;
+    background-position: left center !important;
+    background-repeat: no-repeat !important;
+    background-color: #f8fbff !important;
+}
+
+/* About Three Image Sizes */
+.about-three__img img {
+    /* width: 400px !important; */
+    /* height: 550px !important; */
+    object-fit: cover;
+    
+}
+
+.about-three__img-2 img {
+    width: 250px !important;
+    height: 400px !important;
+    position: relative;
+  right: 10px;
+    object-fit: cover;
+
+}
