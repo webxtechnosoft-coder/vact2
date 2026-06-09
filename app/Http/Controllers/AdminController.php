@@ -56,7 +56,7 @@ class AdminController extends Controller
 
     public function users(): Response
     {
-        $users = User::latest()->paginate(10);
+        $users = User::latest()->paginate(request()->input('per_page', 10))->withQueryString();
 
         return Inertia::render('Admin/Users/Index', [
             'users' => $users,
@@ -127,7 +127,7 @@ class AdminController extends Controller
 
     public function sliders(): Response
     {
-        $sliders = Slider::orderBy('sort_order')->paginate(10);
+        $sliders = Slider::orderBy('sort_order')->paginate(request()->input('per_page', 10))->withQueryString();
 
         return Inertia::render('Admin/Sliders/Index', [
             'sliders' => $sliders,
@@ -339,6 +339,21 @@ class AdminController extends Controller
             }
         }
 
+        // Handle shape image uploads for JSON section points
+        if ($request->hasFile('shape_images')) {
+            foreach ($request->file('shape_images') as $index => $file) {
+                if (isset($points[$index])) {
+                    $path = $file->store('company/shapes', 'public');
+                    // Delete old shape file if it was uploaded to storage
+                    if (!empty($points[$index]['shape']) && str_contains($points[$index]['shape'], '/storage/company/shapes/')) {
+                        $oldPath = str_replace('/storage/', '', $points[$index]['shape']);
+                        Storage::disk('public')->delete($oldPath);
+                    }
+                    $points[$index]['shape'] = '/storage/' . $path;
+                }
+            }
+        }
+
         $data = [
             'title' => $request->title,
             'subtitle' => $request->subtitle,
@@ -376,7 +391,7 @@ class AdminController extends Controller
 
     public function products(): Response
     {
-        $products = Product::orderBy('sort_order')->paginate(10);
+        $products = Product::orderBy('sort_order')->paginate(request()->input('per_page', 10))->withQueryString();
         return Inertia::render('Admin/Products/Index', ['products' => $products]);
     }
 
@@ -458,7 +473,7 @@ class AdminController extends Controller
 
     public function services(): Response
     {
-        $services = Service::orderBy('sort_order')->paginate(10);
+        $services = Service::orderBy('sort_order')->paginate(request()->input('per_page', 10))->withQueryString();
         return Inertia::render('Admin/Services/Index', ['services' => $services]);
     }
 
@@ -536,7 +551,7 @@ class AdminController extends Controller
 
     public function placements(): Response
     {
-        $placements = Placement::orderBy('sort_order')->paginate(10);
+        $placements = Placement::orderBy('sort_order')->paginate(request()->input('per_page', 10))->withQueryString();
         return Inertia::render('Admin/Placements/Index', ['placements' => $placements]);
     }
 
@@ -613,7 +628,7 @@ class AdminController extends Controller
     public function partners(Request $request): Response
     {
         $type = $request->query('type', 'partner');
-        $partners = Partner::whereIn('type', [$type, 'both'])->orderBy('sort_order')->paginate(50);
+        $partners = Partner::whereIn('type', [$type, 'both'])->orderBy('sort_order')->paginate(request()->input('per_page', 10))->withQueryString();
         return Inertia::render('Admin/Partners/Index', [
             'partners' => $partners,
             'type' => $type
@@ -693,7 +708,7 @@ class AdminController extends Controller
 
     public function blogs(): Response
     {
-        $blogs = Blog::orderBy('created_at', 'desc')->paginate(10);
+        $blogs = Blog::orderBy('created_at', 'desc')->paginate(request()->input('per_page', 10))->withQueryString();
         return Inertia::render('Admin/Blogs/Index', ['blogs' => $blogs]);
     }
 
@@ -773,7 +788,7 @@ class AdminController extends Controller
 
     public function faqs(): Response
     {
-        $faqs = Faq::orderBy('sort_order')->paginate(10);
+        $faqs = Faq::orderBy('sort_order')->paginate(request()->input('per_page', 10))->withQueryString();
         return Inertia::render('Admin/Faqs/Index', ['faqs' => $faqs]);
     }
 
@@ -825,7 +840,7 @@ class AdminController extends Controller
 
     public function testimonials(): Response
     {
-        $testimonials = GoogleReview::orderBy('sort_order')->paginate(10);
+        $testimonials = GoogleReview::orderBy('sort_order')->paginate(request()->input('per_page', 10))->withQueryString();
         return Inertia::render('Admin/Testimonials/Index', ['testimonials' => $testimonials]);
     }
 

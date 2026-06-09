@@ -23,7 +23,7 @@ export default function FaqsCreate() {
                 <p style={{ margin: '4px 0 0', fontSize: '14px', color: '#6b7280' }}>Create a new Frequently Asked Question</p>
             </div>
 
-            <div style={{ maxWidth: '700px', backgroundColor: '#fff', borderRadius: '12px', padding: '32px', border: '1px solid #e5e7eb', boxShadow: '0 1px 3px rgba(0,0,0,0.04)' }}>
+            <div style={{ backgroundColor: '#fff', borderRadius: '12px', padding: '32px', border: '1px solid #e5e7eb', boxShadow: '0 1px 3px rgba(0,0,0,0.04)' }}>
                 <form onSubmit={submit}>
                     <div style={{ marginBottom: '20px' }}>
                         <label style={{ display: 'block', marginBottom: '6px', fontSize: '13px', fontWeight: 600, color: '#374151' }}>Question *</label>

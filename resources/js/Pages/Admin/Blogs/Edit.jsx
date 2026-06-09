@@ -30,7 +30,7 @@ export default function BlogsEdit({ blog }) {
                 <p style={{ margin: '4px 0 0', fontSize: '14px', color: '#6b7280' }}>Modify the details of an existing blog post</p>
             </div>
 
-            <div style={{ maxWidth: '800px', backgroundColor: '#fff', borderRadius: '12px', padding: '32px', border: '1px solid #e5e7eb', boxShadow: '0 1px 3px rgba(0,0,0,0.04)' }}>
+            <div style={{ backgroundColor: '#fff', borderRadius: '12px', padding: '32px', border: '1px solid #e5e7eb', boxShadow: '0 1px 3px rgba(0,0,0,0.04)' }}>
                 <form onSubmit={submit} encType="multipart/form-data">
                     <div style={{ marginBottom: '20px' }}>
                         <label style={{ display: 'block', marginBottom: '6px', fontSize: '13px', fontWeight: 600, color: '#374151' }}>Title *</label>
@@ -65,12 +65,12 @@ export default function BlogsEdit({ blog }) {
 
                     <div style={{ marginBottom: '20px' }}>
                         <label style={{ display: 'block', marginBottom: '6px', fontSize: '13px', fontWeight: 600, color: '#374151' }}>Cover Image</label>
-                        {blog.image && (
-                            <div style={{ marginBottom: '12px' }}>
-                                <img src={blog.image.startsWith('http') || blog.image.startsWith('/') ? blog.image : `/storage/${blog.image}`} alt="Preview" style={{ width: '160px', height: '90px', objectFit: 'cover', borderRadius: '8px', border: '1px solid #e5e7eb' }} />
-                            </div>
-                        )}
-                        <input type="file" accept="image/*" onChange={(e) => setData('image', e.target.files[0])} style={{ width: '100%', padding: '8px', border: '1px solid #d1d5db', borderRadius: '8px', fontSize: '14px', boxSizing: 'border-box' }} />
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+                            {blog.image && (
+                                <img src={blog.image.startsWith('http') || blog.image.startsWith('/') ? blog.image : `/storage/${blog.image}`} alt="Preview" style={{ width: '120px', height: '80px', objectFit: 'cover', borderRadius: '6px', border: '1px solid #e5e7eb' }} />
+                            )}
+                            <input type="file" accept="image/*" onChange={(e) => setData('image', e.target.files[0])} style={{ fontSize: '13px' }} />
+                        </div>
                         {errors.image && <p style={{ margin: '4px 0 0', fontSize: '12px', color: '#dc2626' }}>{errors.image}</p>}
                     </div>
 

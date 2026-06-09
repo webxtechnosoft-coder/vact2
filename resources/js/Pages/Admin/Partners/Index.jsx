@@ -37,60 +37,119 @@ export default function PartnersIndex({ partners, type }) {
                 </Link>
             </div>
 
+            <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: '14px' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    <span style={{ fontSize: '13px', color: '#4b5563', fontWeight: 500 }}>Show</span>
+                    <select 
+                        className="ignore"
+                        value={partners.per_page || 10} 
+                        onChange={(e) => {
+                            const query = new URLSearchParams(window.location.search);
+                            query.set('per_page', e.target.value);
+                            query.set('page', '1');
+                            router.get(`${window.location.pathname}?${query.toString()}`, {}, { preserveState: true });
+                        }}
+                        style={{ 
+                            padding: '6px 32px 6px 12px', 
+                            border: '1px solid #d1d5db', 
+                            borderRadius: '8px', 
+                            fontSize: '13px', 
+                            fontWeight: 500,
+                            color: '#374151', 
+                            backgroundColor: '#fff', 
+                            cursor: 'pointer', 
+                            outline: 'none',
+                            appearance: 'none',
+                            WebkitAppearance: 'none',
+                            backgroundImage: `url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjNGI1NTYzIiBzdHJva2Utd2lkdGg9IjIuNSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIj48cG9seWxpbmUgcG9pbnRzPSI2IDkgMTIgMTUgMTggOSI+PC9wb2x5bGluZT48L3N2Zz4=")`,
+                            backgroundRepeat: 'no-repeat',
+                            backgroundPosition: 'right 10px center',
+                            backgroundSize: '12px',
+                            boxShadow: '0 1px 2px rgba(0, 0, 0, 0.05)',
+                            transition: 'all 0.15s ease-in-out',
+                        }}
+                        onFocus={(e) => {
+                            e.target.style.borderColor = '#008ed2';
+                            e.target.style.boxShadow = '0 0 0 3px rgba(0, 142, 210, 0.15)';
+                        }}
+                        onBlur={(e) => {
+                            e.target.style.borderColor = '#d1d5db';
+                            e.target.style.boxShadow = '0 1px 2px rgba(0, 0, 0, 0.05)';
+                        }}
+                    >
+                        <option value="10">10</option>
+                        <option value="25">25</option>
+                        <option value="50">50</option>
+                    </select>
+                    <span style={{ fontSize: '13px', color: '#4b5563', fontWeight: 500 }}>entries</span>
+                </div>
+            </div>
+
             {partners.data.length === 0 ? (
                 <div style={{ backgroundColor: '#fff', borderRadius: '12px', border: '1px solid #e5e7eb', padding: '60px', textAlign: 'center', color: '#9ca3af', fontSize: '14px' }}>
                     No logos found. Add one to get started.
                 </div>
             ) : (
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(180px, 1fr))', gap: '16px' }}>
-                    {partners.data.map((p) => (
-                        <div key={p.id} style={{ backgroundColor: '#fff', borderRadius: '12px', border: '1px solid #e5e7eb', boxShadow: '0 1px 3px rgba(0,0,0,0.04)', overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
-                            {/* Logo Image */}
-                            <div style={{ padding: '20px', backgroundColor: '#f9fafb', display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '90px' }}>
-                                {getImgSrc(p.logo) ? (
-                                    <img
-                                        src={getImgSrc(p.logo)}
-                                        alt={p.name || ''}
-                                        style={{ maxHeight: '60px', maxWidth: '140px', objectFit: 'contain' }}
-                                        onError={(e) => { e.target.style.display = 'none'; e.target.nextSibling.style.display = 'flex'; }}
-                                    />
-                                ) : null}
-                                <div style={{ display: 'none', flexDirection: 'column', alignItems: 'center', gap: '6px', color: '#9ca3af' }}>
-                                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
-                                    <span style={{ fontSize: '11px' }}>No image</span>
-                                </div>
-                            </div>
-
-                            {/* Info */}
-                            <div style={{ padding: '12px 14px', flex: 1 }}>
-                                <p style={{ margin: 0, fontSize: '12px', fontWeight: 600, color: '#111827', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-                                    {p.name || '—'}
-                                </p>
-                                <div style={{ marginTop: '6px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                                    <span style={{ display: 'inline-block', padding: '2px 8px', borderRadius: '20px', fontSize: '10px', fontWeight: 600, backgroundColor: p.is_active ? '#ecfdf5' : '#fef2f2', color: p.is_active ? '#065f46' : '#dc2626' }}>
-                                        {p.is_active ? 'Active' : 'Inactive'}
-                                    </span>
-                                    <span style={{ fontSize: '11px', color: '#9ca3af' }}>#{p.sort_order}</span>
-                                </div>
-                            </div>
-
-                            {/* Actions */}
-                            <div style={{ padding: '10px 14px', borderTop: '1px solid #f3f4f6', display: 'flex', gap: '6px' }}>
-                                <Link
-                                    href={route('admin.partners.edit', p.id)}
-                                    style={{ flex: 1, textAlign: 'center', padding: '6px', borderRadius: '6px', fontSize: '12px', fontWeight: 500, backgroundColor: '#eef9ff', color: '#008ed2', textDecoration: 'none' }}
-                                >
-                                    Edit
-                                </Link>
-                                <button
-                                    onClick={() => deletePartner(p)}
-                                    style={{ flex: 1, padding: '6px', borderRadius: '6px', fontSize: '12px', fontWeight: 500, backgroundColor: '#fef2f2', color: '#dc2626', border: 'none', cursor: 'pointer' }}
-                                >
-                                    Delete
-                                </button>
-                            </div>
-                        </div>
-                    ))}
+                <div style={{ backgroundColor: '#fff', borderRadius: '12px', border: '1px solid #e5e7eb', boxShadow: '0 1px 3px rgba(0,0,0,0.04)', overflow: 'hidden' }}>
+                    <div style={{ overflowX: 'auto' }}>
+                        <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+                            <thead>
+                                <tr style={{ backgroundColor: '#f9fafb' }}>
+                                    <th style={{ padding: '12px 20px', textAlign: 'left', fontSize: '11px', fontWeight: 600, color: '#6b7280', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Logo</th>
+                                    <th style={{ padding: '12px 20px', textAlign: 'left', fontSize: '11px', fontWeight: 600, color: '#6b7280', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Name</th>
+                                    <th style={{ padding: '12px 20px', textAlign: 'center', fontSize: '11px', fontWeight: 600, color: '#6b7280', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Order</th>
+                                    <th style={{ padding: '12px 20px', textAlign: 'center', fontSize: '11px', fontWeight: 600, color: '#6b7280', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Status</th>
+                                    <th style={{ padding: '12px 20px', textAlign: 'right', fontSize: '11px', fontWeight: 600, color: '#6b7280', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {partners.data.map((p) => (
+                                    <tr key={p.id} style={{ borderTop: '1px solid #f3f4f6' }}>
+                                        <td style={{ padding: '14px 20px' }}>
+                                            {getImgSrc(p.logo) ? (
+                                                <div style={{ width: '100px', height: '40px', display: 'flex', alignItems: 'center', justifyContent: 'flex-start' }}>
+                                                    <img
+                                                        src={getImgSrc(p.logo)}
+                                                        alt={p.name || ''}
+                                                        style={{ maxHeight: '40px', maxWidth: '100px', objectFit: 'contain' }}
+                                                    />
+                                                </div>
+                                            ) : (
+                                                <span style={{ fontSize: '12px', color: '#9ca3af' }}>No image</span>
+                                            )}
+                                        </td>
+                                        <td style={{ padding: '14px 20px', fontSize: '13px', fontWeight: 500, color: '#111827' }}>
+                                            {p.name || '—'}
+                                        </td>
+                                        <td style={{ padding: '14px 20px', textAlign: 'center', fontSize: '13px', color: '#6b7280' }}>
+                                            {p.sort_order}
+                                        </td>
+                                        <td style={{ padding: '14px 20px', textAlign: 'center' }}>
+                                            <span style={{ display: 'inline-block', padding: '3px 10px', borderRadius: '20px', fontSize: '11px', fontWeight: 600, backgroundColor: p.is_active ? '#ecfdf5' : '#fef2f2', color: p.is_active ? '#065f46' : '#dc2626' }}>
+                                                {p.is_active ? 'Active' : 'Inactive'}
+                                            </span>
+                                        </td>
+                                        <td style={{ padding: '14px 20px', textAlign: 'right', whiteSpace: 'nowrap' }}>
+                                            <Link href={route('admin.partners.edit', p.id)} style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: '32px', height: '32px', borderRadius: '8px', backgroundColor: '#eef9ff', color: '#008ed2', textDecoration: 'none', marginRight: '8px', transition: 'all 0.15s' }} title="Edit">
+                                                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                                                    <path d="M12 20h9"></path>
+                                                    <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path>
+                                                </svg>
+                                            </Link>
+                                            <button onClick={() => deletePartner(p)} style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: '32px', height: '32px', borderRadius: '8px', backgroundColor: '#fef2f2', color: '#dc2626', border: 'none', cursor: 'pointer', transition: 'all 0.15s' }} title="Delete">
+                                                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                                                    <polyline points="3 6 5 6 21 6"></polyline>
+                                                    <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                                                    <line x1="10" y1="11" x2="10" y2="17"></line>
+                                                    <line x1="14" y1="11" x2="14" y2="17"></line>
+                                                </svg>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             )}
 

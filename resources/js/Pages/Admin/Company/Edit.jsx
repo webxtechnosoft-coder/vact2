@@ -61,7 +61,7 @@ export default function CompanyEdit({ contents }) {
                 <p style={{ margin: '4px 0 0', fontSize: '14px', color: '#6b7280' }}>Edit all content for the Our Company section on the home page</p>
             </div>
 
-            <div style={{ maxWidth: '800px', backgroundColor: '#fff', borderRadius: '12px', padding: '24px', border: '1px solid #e5e7eb' }}>
+            <div style={{ backgroundColor: '#fff', borderRadius: '12px', padding: '24px', border: '1px solid #e5e7eb' }}>
                 <form onSubmit={submit} encType="multipart/form-data">
                     <input type="hidden" name="sections[0][id]" value={sec.id} />
                     <input type="hidden" name="sections[0][section_key]" value="home-company" />

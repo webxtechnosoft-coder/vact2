@@ -33,12 +33,20 @@ export default function ProductsEdit({ product }) {
         <AdminLayout>
             <Head title="Edit Product" />
 
-            <div style={{ marginBottom: '24px' }}>
-                <h1 style={{ margin: 0, fontSize: '22px', fontWeight: 700, color: '#111827' }}>Edit Product</h1>
-                <p style={{ margin: '4px 0 0', fontSize: '14px', color: '#6b7280' }}>Update product details and specifications</p>
+            <div style={{ marginBottom: '24px', display: 'flex', gap: '12px', alignItems: 'center' }}>
+                <Link href={route('admin.products')} style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: '36px', height: '36px', borderRadius: '50%', backgroundColor: '#fff', border: '1px solid #e5e7eb', color: '#374151', textDecoration: 'none', transition: 'all 0.15s ease' }} title="Back to products">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                        <line x1="19" y1="12" x2="5" y2="12"></line>
+                        <polyline points="12 19 5 12 12 5"></polyline>
+                    </svg>
+                </Link>
+                <div>
+                    <h1 style={{ margin: 0, fontSize: '22px', fontWeight: 700, color: '#111827' }}>Edit Product</h1>
+                    <p style={{ margin: '4px 0 0', fontSize: '14px', color: '#6b7280' }}>Update product details and specifications</p>
+                </div>
             </div>
 
-            <div style={{ maxWidth: '700px', backgroundColor: '#fff', borderRadius: '12px', padding: '32px', border: '1px solid #e5e7eb', boxShadow: '0 1px 3px rgba(0,0,0,0.04)' }}>
+            <div style={{ backgroundColor: '#fff', borderRadius: '12px', padding: '32px', border: '1px solid #e5e7eb', boxShadow: '0 1px 3px rgba(0,0,0,0.04)' }}>
                 <form onSubmit={submit} encType="multipart/form-data">
                     <div style={{ marginBottom: '20px' }}>
                         <label style={{ display: 'block', marginBottom: '6px', fontSize: '13px', fontWeight: 600, color: '#374151' }}>Title *</label>

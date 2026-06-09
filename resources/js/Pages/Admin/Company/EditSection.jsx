@@ -16,6 +16,7 @@ export default function EditSection({ section, content }) {
         settings: s,
         image: null,
         image2: null,
+        shape_images: {},
     });
 
     const [listItems, setListItems] = useState(isJsonSection && Array.isArray(pts) ? pts : []);
@@ -28,7 +29,7 @@ export default function EditSection({ section, content }) {
 
     const addItem = () => {
         const newItem = section === 'how-it-works' 
-            ? { step: listItems.length + 1, title: '', icon: '', shape: '' }
+            ? { step: listItems.length + 1, title: '', icon: '' }
             : { title: '', text: '', icon: '' };
         setListItems([...listItems, newItem]);
     };
@@ -41,6 +42,29 @@ export default function EditSection({ section, content }) {
             });
         }
         setListItems(newList);
+
+        // Update shape_images keys to match the new listItems indexes
+        const newShapeImages = {};
+        let newIdx = 0;
+        listItems.forEach((_, idx) => {
+            if (idx !== index) {
+                if (data.shape_images[idx]) {
+                    newShapeImages[newIdx] = data.shape_images[idx];
+                }
+                newIdx++;
+            }
+        });
+        setData('shape_images', newShapeImages);
+    };
+
+    const handleShapeFileChange = (index, file) => {
+        if (!file) return;
+        setData('shape_images', {
+            ...data.shape_images,
+            [index]: file
+        });
+        const previewUrl = URL.createObjectURL(file);
+        updateItem(index, 'shape', previewUrl);
     };
 
     const updateItem = (index, field, value) => {
@@ -110,24 +134,27 @@ export default function EditSection({ section, content }) {
                 <p style={{ margin: '4px 0 0', fontSize: '14px', color: '#6b7280' }}>Manage the content and settings for this homepage section</p>
             </div>
 
-            <div style={{ maxWidth: '800px', backgroundColor: '#fff', borderRadius: '12px', padding: '32px', border: '1px solid #e5e7eb', boxShadow: '0 1px 3px rgba(0,0,0,0.04)' }}>
+            <div style={{ backgroundColor: '#fff', borderRadius: '12px', padding: '32px', border: '1px solid #e5e7eb', boxShadow: '0 1px 3px rgba(0,0,0,0.04)' }}>
                 <form onSubmit={submit} encType="multipart/form-data">
                     <h3 style={{ margin: '0 0 20px', fontSize: '15px', fontWeight: 700, color: '#1f2937', borderBottom: '1px solid #f3f4f6', paddingBottom: '10px' }}>Text Content</h3>
 
-                    <div style={{ marginBottom: '20px' }}>
-                        <label style={{ display: 'block', marginBottom: '6px', fontSize: '13px', fontWeight: 600, color: '#374151' }}>Tagline / Subtitle</label>
-                        <input type="text" value={data.subtitle} onChange={(e) => setData('subtitle', e.target.value)} style={{ width: '100%', padding: '10px 14px', border: '1px solid #d1d5db', borderRadius: '8px', fontSize: '14px', color: '#111827', boxSizing: 'border-box' }} />
+                    <div style={{ marginBottom: '20px', display: 'flex', gap: '16px' }}>
+                        <div style={{ flex: 1 }}>
+                            <label style={{ display: 'block', marginBottom: '6px', fontSize: '13px', fontWeight: 600, color: '#374151' }}>Tagline / Subtitle</label>
+                            <input type="text" value={data.subtitle} onChange={(e) => setData('subtitle', e.target.value)} style={{ width: '100%', padding: '10px 14px', border: '1px solid #d1d5db', borderRadius: '8px', fontSize: '14px', color: '#111827', boxSizing: 'border-box' }} />
+                        </div>
+                        <div style={{ flex: 1 }}>
+                            <label style={{ display: 'block', marginBottom: '6px', fontSize: '13px', fontWeight: 600, color: '#374151' }}>Main Title</label>
+                            <input type="text" value={data.title} onChange={(e) => setData('title', e.target.value)} style={{ width: '100%', padding: '10px 14px', border: '1px solid #d1d5db', borderRadius: '8px', fontSize: '14px', color: '#111827', boxSizing: 'border-box' }} />
+                        </div>
                     </div>
 
-                    <div style={{ marginBottom: '20px' }}>
-                        <label style={{ display: 'block', marginBottom: '6px', fontSize: '13px', fontWeight: 600, color: '#374151' }}>Main Title</label>
-                        <input type="text" value={data.title} onChange={(e) => setData('title', e.target.value)} style={{ width: '100%', padding: '10px 14px', border: '1px solid #d1d5db', borderRadius: '8px', fontSize: '14px', color: '#111827', boxSizing: 'border-box' }} />
-                    </div>
-
-                    <div style={{ marginBottom: '20px' }}>
-                        <label style={{ display: 'block', marginBottom: '6px', fontSize: '13px', fontWeight: 600, color: '#374151' }}>Description</label>
-                        <textarea value={data.description} onChange={(e) => setData('description', e.target.value)} rows={5} style={{ width: '100%', padding: '10px 14px', border: '1px solid #d1d5db', borderRadius: '8px', fontSize: '14px', color: '#111827', boxSizing: 'border-box', resize: 'vertical' }} />
-                    </div>
+                    {section !== 'how-it-works' && (
+                        <div style={{ marginBottom: '20px' }}>
+                            <label style={{ display: 'block', marginBottom: '6px', fontSize: '13px', fontWeight: 600, color: '#374151' }}>Description</label>
+                            <textarea value={data.description} onChange={(e) => setData('description', e.target.value)} rows={5} style={{ width: '100%', padding: '10px 14px', border: '1px solid #d1d5db', borderRadius: '8px', fontSize: '14px', color: '#111827', boxSizing: 'border-box', resize: 'vertical' }} />
+                        </div>
+                    )}
 
                     {(section === 'about' || section === 'training') && (
                         <div style={{ marginBottom: '20px' }}>
@@ -143,60 +170,88 @@ export default function EditSection({ section, content }) {
                         {isJsonSection ? (
                             <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
                                 {listItems.map((item, idx) => (
-                                    <div key={idx} style={{ padding: '16px', border: '1px solid #e5e7eb', borderRadius: '8px', position: 'relative', backgroundColor: '#f9fafb' }}>
-                                        <button 
-                                            type="button" 
-                                            onClick={() => removeItem(idx)} 
-                                            style={{ position: 'absolute', top: '12px', right: '12px', padding: '4px 8px', borderRadius: '6px', backgroundColor: '#fee2e2', color: '#ef4444', border: 'none', fontSize: '11px', cursor: 'pointer', fontWeight: 600 }}
-                                        >
-                                            Remove
-                                        </button>
-                                        
+                                    <div key={idx} style={{ 
+                                        display: 'flex', 
+                                        alignItems: 'flex-end', 
+                                        gap: '12px', 
+                                        padding: '16px', 
+                                        border: '1px solid #e5e7eb', 
+                                        borderRadius: '8px', 
+                                        backgroundColor: '#f9fafb' 
+                                    }}>
                                         {section === 'how-it-works' && (
-                                            <div style={{ marginBottom: '12px', display: 'flex', gap: '16px' }}>
-                                                <div style={{ flex: 1 }}>
+                                            <>
+                                                <div style={{ flex: '0 0 100px' }}>
                                                     <label style={{ display: 'block', marginBottom: '4px', fontSize: '12px', fontWeight: 600, color: '#4b5563' }}>Step Number</label>
                                                     <input 
                                                         type="number" 
                                                         value={item.step || idx + 1} 
                                                         onChange={(e) => updateItem(idx, 'step', parseInt(e.target.value) || 0)} 
-                                                        style={{ width: '100%', padding: '8px 12px', border: '1px solid #d1d5db', borderRadius: '6px', fontSize: '14px' }} 
+                                                        style={{ width: '100%', height: '38px', padding: '8px 12px', border: '1px solid #d1d5db', borderRadius: '6px', fontSize: '14px', boxSizing: 'border-box' }} 
+                                                    />
+                                                </div>
+                                                <div style={{ flex: 1 }}>
+                                                    <label style={{ display: 'block', marginBottom: '4px', fontSize: '12px', fontWeight: 600, color: '#4b5563' }}>Title</label>
+                                                    <input 
+                                                        type="text" 
+                                                        value={item.title || ''} 
+                                                        onChange={(e) => updateItem(idx, 'title', e.target.value)} 
+                                                        style={{ width: '100%', height: '38px', padding: '8px 12px', border: '1px solid #d1d5db', borderRadius: '6px', fontSize: '14px', boxSizing: 'border-box' }} 
+                                                    />
+                                                </div>
+                                            </>
+                                        )}
+
+                                        {section === 'why-choose-us' && (
+                                            <>
+                                                <div style={{ flex: 1 }}>
+                                                    <label style={{ display: 'block', marginBottom: '4px', fontSize: '12px', fontWeight: 600, color: '#4b5563' }}>Title</label>
+                                                    <input 
+                                                        type="text" 
+                                                        value={item.title || ''} 
+                                                        onChange={(e) => updateItem(idx, 'title', e.target.value)} 
+                                                        style={{ width: '100%', height: '38px', padding: '8px 12px', border: '1px solid #d1d5db', borderRadius: '6px', fontSize: '14px', boxSizing: 'border-box' }} 
                                                     />
                                                 </div>
                                                 <div style={{ flex: 2 }}>
-                                                    <label style={{ display: 'block', marginBottom: '4px', fontSize: '12px', fontWeight: 600, color: '#4b5563' }}>Shape Image Path (optional)</label>
+                                                    <label style={{ display: 'block', marginBottom: '4px', fontSize: '12px', fontWeight: 600, color: '#4b5563' }}>Text / Description</label>
                                                     <input 
                                                         type="text" 
-                                                        value={item.shape || ''} 
-                                                        onChange={(e) => updateItem(idx, 'shape', e.target.value)} 
-                                                        style={{ width: '100%', padding: '8px 12px', border: '1px solid #d1d5db', borderRadius: '6px', fontSize: '14px' }} 
-                                                        placeholder="/assets/images/shapes/process-one-shape-1.png"
+                                                        value={item.text || ''} 
+                                                        onChange={(e) => updateItem(idx, 'text', e.target.value)} 
+                                                        style={{ width: '100%', height: '38px', padding: '8px 12px', border: '1px solid #d1d5db', borderRadius: '6px', fontSize: '14px', boxSizing: 'border-box' }} 
                                                     />
                                                 </div>
-                                            </div>
+                                            </>
                                         )}
 
-                                        <div style={{ marginBottom: section === 'why-choose-us' ? '12px' : '0' }}>
-                                            <label style={{ display: 'block', marginBottom: '4px', fontSize: '12px', fontWeight: 600, color: '#4b5563' }}>Title</label>
-                                            <input 
-                                                type="text" 
-                                                value={item.title || ''} 
-                                                onChange={(e) => updateItem(idx, 'title', e.target.value)} 
-                                                style={{ width: '100%', padding: '8px 12px', border: '1px solid #d1d5db', borderRadius: '6px', fontSize: '14px' }} 
-                                            />
-                                        </div>
-
-                                        {section === 'why-choose-us' && (
-                                            <div style={{ marginTop: '12px' }}>
-                                                <label style={{ display: 'block', marginBottom: '4px', fontSize: '12px', fontWeight: 600, color: '#4b5563' }}>Text / Description</label>
-                                                <textarea 
-                                                    value={item.text || ''} 
-                                                    onChange={(e) => updateItem(idx, 'text', e.target.value)} 
-                                                    rows={2}
-                                                    style={{ width: '100%', padding: '8px 12px', border: '1px solid #d1d5db', borderRadius: '6px', fontSize: '14px', resize: 'vertical' }} 
-                                                />
-                                            </div>
-                                        )}
+                                        <button 
+                                            type="button" 
+                                            onClick={() => removeItem(idx)} 
+                                            style={{ 
+                                                display: 'inline-flex', 
+                                                alignItems: 'center', 
+                                                justifyContent: 'center', 
+                                                width: '38px', 
+                                                height: '38px', 
+                                                borderRadius: '6px', 
+                                                backgroundColor: '#fee2e2', 
+                                                color: '#ef4444', 
+                                                border: 'none', 
+                                                cursor: 'pointer', 
+                                                transition: 'all 0.15s',
+                                                boxSizing: 'border-box',
+                                                flexShrink: 0
+                                            }}
+                                            title="Delete"
+                                        >
+                                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                                                <polyline points="3 6 5 6 21 6"></polyline>
+                                                <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                                                <line x1="10" y1="11" x2="10" y2="17"></line>
+                                                <line x1="14" y1="11" x2="14" y2="17"></line>
+                                            </svg>
+                                        </button>
                                     </div>
                                 ))}
 
@@ -313,22 +368,26 @@ export default function EditSection({ section, content }) {
                     {(section === 'about' || section === 'who-we-are' || section === 'training' || section === 'why-choose-us') && (
                         <>
                             <h3 style={{ margin: '28px 0 20px', fontSize: '15px', fontWeight: 700, color: '#1f2937', borderBottom: '1px solid #f3f4f6', paddingBottom: '10px' }}>Images</h3>
-                            <div style={{ marginBottom: '20px', display: 'flex', gap: '20px' }}>
+                            <div style={{ marginBottom: '20px', display: 'flex', gap: '24px' }}>
                                 <div style={{ flex: 1 }}>
                                     <label style={{ display: 'block', marginBottom: '6px', fontSize: '13px', fontWeight: 600, color: '#374151' }}>Main Image</label>
-                                    {previewSrc && (
-                                        <img src={previewSrc} alt="Preview" style={{ width: '150px', height: '100px', objectFit: 'cover', borderRadius: '6px', marginBottom: '10px', border: '1px solid #e5e7eb' }} />
-                                    )}
-                                    <input type="file" accept="image/*" onChange={(e) => setData('image', e.target.files[0])} style={{ width: '100%', fontSize: '13px' }} />
+                                    <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+                                        {previewSrc && (
+                                            <img src={previewSrc} alt="Preview" style={{ width: '120px', height: '80px', objectFit: 'cover', borderRadius: '6px', border: '1px solid #e5e7eb' }} />
+                                        )}
+                                        <input type="file" accept="image/*" onChange={(e) => setData('image', e.target.files[0])} style={{ fontSize: '13px' }} />
+                                    </div>
                                     {errors.image && <p style={{ margin: '4px 0 0', fontSize: '12px', color: '#dc2626' }}>{errors.image}</p>}
                                 </div>
                                 {(section === 'about' || section === 'who-we-are') && (
                                     <div style={{ flex: 1 }}>
                                         <label style={{ display: 'block', marginBottom: '6px', fontSize: '13px', fontWeight: 600, color: '#374151' }}>Secondary Image</label>
-                                        {previewSrc2 && (
-                                            <img src={previewSrc2} alt="Preview" style={{ width: '150px', height: '100px', objectFit: 'cover', borderRadius: '6px', marginBottom: '10px', border: '1px solid #e5e7eb' }} />
-                                        )}
-                                        <input type="file" accept="image/*" onChange={(e) => setData('image2', e.target.files[0])} style={{ width: '100%', fontSize: '13px' }} />
+                                        <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+                                            {previewSrc2 && (
+                                                <img src={previewSrc2} alt="Preview" style={{ width: '120px', height: '80px', objectFit: 'cover', borderRadius: '6px', border: '1px solid #e5e7eb' }} />
+                                            )}
+                                            <input type="file" accept="image/*" onChange={(e) => setData('image2', e.target.files[0])} style={{ fontSize: '13px' }} />
+                                        </div>
                                         {errors.image2 && <p style={{ margin: '4px 0 0', fontSize: '12px', color: '#dc2626' }}>{errors.image2}</p>}
                                     </div>
                                 )}
