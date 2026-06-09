@@ -1,8 +1,31 @@
 import { Link, usePage, router } from '@inertiajs/react';
 
 export default function Header() {
-    const { auth } = usePage().props;
+    const { auth, sidebarProducts = [] } = usePage().props;
     const user = auth?.user;
+
+    // Group active products by category
+    const groupedItems = [];
+    const categoryMap = {};
+
+    sidebarProducts.forEach(item => {
+        if (item.category) {
+            if (!categoryMap[item.category]) {
+                categoryMap[item.category] = {
+                    isGroup: true,
+                    categoryName: item.category,
+                    items: []
+                };
+                groupedItems.push(categoryMap[item.category]);
+            }
+            categoryMap[item.category].items.push(item);
+        } else {
+            groupedItems.push({
+                isGroup: false,
+                ...item
+            });
+        }
+    });
 
     return (
         <>
@@ -74,20 +97,38 @@ export default function Header() {
                                     <li className="dropdown">
                                         <a href="#">Our Products</a>
                                         <ul className="shadow-box">
-                                            <li className="dropdown">
-                                                <a style={{ fontSize: '14px', padding: '10px 20px' }} href="#">Automotive Embedded Development Boards</a>
-                                                <ul className="shadow-box">
-                                                    <li><Link style={{ fontSize: '13px', padding: '8px 20px' }} href="/vact-autoedge-development-board">Autoedge Development Board</Link></li>
-                                                    <li><Link style={{ fontSize: '13px', padding: '8px 20px' }} href="/vact-embcore-development-board">EmbCore Development Board</Link></li>
-                                                </ul>
-                                            </li>
-                                            <li><Link style={{ fontSize: '14px', padding: '10px 20px' }} href="/automatic-milk-vending-machine">Automatic Milk Vending Machine</Link></li>
-                                            <li><Link style={{ fontSize: '14px', padding: '10px 20px' }} href="/automatic-oil-vending-machine">Automatic Oil Vending Machine</Link></li>
-                                            <li><Link style={{ fontSize: '14px', padding: '10px 20px' }} href="/automatic-oil-pouch-packing-machine">Automatic Oil Pouch Packing</Link></li>
-                                            <li><Link style={{ fontSize: '14px', padding: '10px 20px' }} href="/cold-drink-vending-machine">Cold Drink Vending Machine</Link></li>
-                                            <li><Link style={{ fontSize: '14px', padding: '10px 20px' }} href="/automatic-milk-bag-packing-machine">Automatic Milk Bag Packing Machine</Link></li>
-                                            <li><Link style={{ fontSize: '14px', padding: '10px 20px' }} href="/automatic-coffee-vending-machine">Automatic Coffee Vending Machine</Link></li>
-                                            <li><Link style={{ fontSize: '14px', padding: '10px 20px' }} href="/open-top-chambers">Open Top Chambers</Link></li>
+                                            {groupedItems.map((menuItem, idx) => {
+                                                if (menuItem.isGroup) {
+                                                    return (
+                                                        <li key={idx} className="submenu">
+                                                            <a style={{ fontSize: '14px', padding: '10px 20px' }} href="#">{menuItem.categoryName}</a>
+                                                            <ul className="submenu-box">
+                                                                {menuItem.items.map((subItem) => (
+                                                                    <li key={subItem.id}>
+                                                                        <Link 
+                                                                            style={{ fontSize: '13px', padding: '8px 20px' }} 
+                                                                            href={subItem.link}
+                                                                        >
+                                                                            {subItem.title}
+                                                                        </Link>
+                                                                    </li>
+                                                                ))}
+                                                            </ul>
+                                                        </li>
+                                                    );
+                                                } else {
+                                                    return (
+                                                        <li key={menuItem.id}>
+                                                            <Link 
+                                                                style={{ fontSize: '14px', padding: '10px 20px' }} 
+                                                                href={menuItem.link}
+                                                            >
+                                                                {menuItem.title}
+                                                            </Link>
+                                                        </li>
+                                                    );
+                                                }
+                                            })}
                                         </ul>
                                     </li>
 

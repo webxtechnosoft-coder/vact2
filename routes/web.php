@@ -56,15 +56,6 @@ Route::get('/civil-pmc', fn() => Inertia::render('CivilPmc'));
 Route::get('/human-resource', fn() => Inertia::render('HumanResource'));
 Route::get('/talent-based-outsourcing', fn() => Inertia::render('TalentBasedOutsourcing'));
 
-Route::get('/vact-autoedge-development-board', fn() => Inertia::render('VactAutoedgeDevelopmentBoard'));
-Route::get('/vact-embcore-development-board', fn() => Inertia::render('VactEmbcoreDevelopmentBoard'));
-Route::get('/automatic-milk-vending-machine', fn() => Inertia::render('AutomaticMilkVendingMachine'));
-Route::get('/automatic-oil-vending-machine', fn() => Inertia::render('AutomaticOilVendingMachine'));
-Route::get('/automatic-oil-pouch-packing-machine', fn() => Inertia::render('AutomaticOilPouchPackingMachine'));
-Route::get('/cold-drink-vending-machine', fn() => Inertia::render('ColdDrinkVendingMachine'));
-Route::get('/automatic-milk-bag-packing-machine', fn() => Inertia::render('AutomaticMilkBagPackingMachine'));
-Route::get('/automatic-coffee-vending-machine', fn() => Inertia::render('AutomaticCoffeeVendingMachine'));
-Route::get('/open-top-chambers', fn() => Inertia::render('OpenTopChambers'));
 
 Route::get('/qnx-rtos-training', fn() => Inertia::render('QnxRtosTraining'));
 Route::get('/freertos-training', fn() => Inertia::render('FreertosTraining'));
@@ -167,3 +158,6 @@ Route::middleware('auth')->group(function () {
 });
 
 require __DIR__.'/auth.php';
+
+Route::get('/{slug}', [App\Http\Controllers\ProductController::class, 'show'])->name('products.show');
+

@@ -412,7 +412,14 @@ class AdminController extends Controller
             'link' => 'nullable|string|max:255',
             'sort_order' => 'nullable|integer|min:0',
             'is_active' => 'nullable|boolean',
-            'page_content' => 'nullable|string',
+            'page_content' => ['nullable', 'string', function ($attribute, $value, $fail) {
+                if ($value && $value !== '') {
+                    json_decode($value);
+                    if (json_last_error() !== JSON_ERROR_NONE) {
+                        $fail('The Page Content field must be valid JSON. Error: ' . json_last_error_msg());
+                    }
+                }
+            }],
         ]);
 
         $data = $request->only(['title', 'category', 'description', 'rating', 'rating_count', 'link', 'sort_order', 'is_active', 'page_content']);
@@ -443,7 +450,14 @@ class AdminController extends Controller
             'link' => 'nullable|string|max:255',
             'sort_order' => 'nullable|integer|min:0',
             'is_active' => 'nullable|boolean',
-            'page_content' => 'nullable|string',
+            'page_content' => ['nullable', 'string', function ($attribute, $value, $fail) {
+                if ($value && $value !== '') {
+                    json_decode($value);
+                    if (json_last_error() !== JSON_ERROR_NONE) {
+                        $fail('The Page Content field must be valid JSON. Error: ' . json_last_error_msg());
+                    }
+                }
+            }],
         ]);
 
         $data = $request->only(['title', 'category', 'description', 'rating', 'rating_count', 'link', 'sort_order', 'is_active', 'page_content']);
