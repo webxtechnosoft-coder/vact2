@@ -21,13 +21,51 @@ export default function AdminLayout({ children }) {
         return false;
     };
 
-    const navItems = [
-        { label: 'Dashboard', path: '/admin', icon: 'M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6' },
-        { label: 'Sliders', path: '/admin/sliders', icon: 'M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2' },
-        { label: 'Company', path: '/admin/company', icon: 'M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4' },
+    const isHomeActive = () => {
+        const path = window.location.pathname;
+        return path.startsWith('/admin/sliders') ||
+               path.startsWith('/admin/company') ||
+               path.startsWith('/admin/products') ||
+               path.startsWith('/admin/services') ||
+               path.startsWith('/admin/placements') ||
+               path.startsWith('/admin/partners') ||
+               path.startsWith('/admin/blogs') ||
+               path.startsWith('/admin/faqs') ||
+               path.startsWith('/admin/testimonials');
+    };
 
-        { label: 'Users', path: '/admin/users', icon: 'M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z' },
+    const services = usePage().props.services || [];
+    const products = usePage().props.sidebarProducts || [];
+    const isServiceActive = () => {
+        return window.location.pathname.startsWith('/admin/services');
+    };
+    const isProductActive = () => {
+        return window.location.pathname.startsWith('/admin/products');
+    };
+
+    const [homeOpen, setHomeOpen] = useState(true);
+    const [trainingOpen, setTrainingOpen] = useState(window.location.pathname === '/admin/company/training');
+    const [servicesOpen, setServicesOpen] = useState(isServiceActive());
+    const [productsOpen, setProductsOpen] = useState(isProductActive());
+    const [productSubOpen, setProductSubOpen] = useState({});
+
+    const homeSections = [
+        { label: 'Slider', path: '/admin/sliders' },
+        { label: 'About', path: '/admin/company/about' },
+        { label: 'Who We Are', path: '/admin/company/who-we-are' },
+        { label: 'Our Product', path: '/admin/products' },
+        { label: 'Our Service', path: '/admin/services' },
+        { label: 'Our Training', path: '/admin/company/training' },
+        { label: 'Placements', path: '/admin/placements' },
+        { label: 'Placement Images', path: '/admin/partners?type=partner' },
+        { label: 'Our Clients', path: '/admin/partners?type=client' },
+        { label: 'Why Choose Us', path: '/admin/company/why-choose-us' },
+        { label: 'How It Works', path: '/admin/company/how-it-works' },
+        { label: 'Blogs', path: '/admin/blogs' },
+        { label: 'FAQ', path: '/admin/faqs' },
+        { label: 'Testimonial', path: '/admin/testimonials' }
     ];
+
 
     return (
         <div style={{ display: 'flex', height: '100vh', fontFamily: "'DM Sans', sans-serif", backgroundColor: '#f1f5f9' }}>
@@ -42,24 +80,283 @@ export default function AdminLayout({ children }) {
                     </Link>
                 </div>
 
-                <div style={{ padding: '16px 12px 8px' }}>
-                    <p style={{ margin: 0, fontSize: '11px', fontWeight: 600, color: '#9ca3af', textTransform: 'uppercase', letterSpacing: '1px', padding: '0 12px' }}>Main Menu</p>
-                </div>
+                <div style={{ flex: 1, overflowY: 'auto', scrollbarWidth: 'none', msOverflowStyle: 'none' }} className="hide-scrollbar">
+                    <style dangerouslySetInnerHTML={{__html: `
+                        .hide-scrollbar::-webkit-scrollbar {
+                            display: none;
+                        }
+                    `}} />
 
-                <nav style={{ flex: 1, padding: '4px 12px' }}>
-                    {navItems.map((item) => (
+                    <div style={{ padding: '16px 12px 8px' }}>
+                        <p style={{ margin: 0, fontSize: '11px', fontWeight: 600, color: '#9ca3af', textTransform: 'uppercase', letterSpacing: '1px', padding: '0 12px' }}>Main Menu</p>
+                    </div>
+
+                    <nav style={{ padding: '4px 12px' }}>
+                        {/* Dashboard */}
                         <Link
-                            key={item.path}
-                            href={item.path}
-                            style={{ display: 'flex', alignItems: 'center', gap: '12px', padding: '10px 14px', marginBottom: '2px', borderRadius: '10px', fontSize: '14px', fontWeight: 500, textDecoration: 'none', color: isActive(item.path) ? '#008ed2' : '#4B5563', backgroundColor: isActive(item.path) ? '#eef9ff' : 'transparent', transition: 'all 0.15s' }}
+                            href="/admin"
+                            style={{ display: 'flex', alignItems: 'center', gap: '12px', padding: '10px 14px', marginBottom: '2px', borderRadius: '10px', fontSize: '14px', fontWeight: 500, textDecoration: 'none', color: isActive('/admin') ? '#008ed2' : '#4B5563', backgroundColor: isActive('/admin') ? '#eef9ff' : 'transparent', transition: 'all 0.15s' }}
                         >
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke={isActive(item.path) ? '#008ed2' : '#9ca3af'} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-                                <path d={item.icon} />
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke={isActive('/admin') ? '#008ed2' : '#9ca3af'} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                                <path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
                             </svg>
-                            {item.label}
+                            Dashboard
                         </Link>
-                    ))}
-                </nav>
+
+                        {/* Home Dropdown Group */}
+                        <div style={{ marginBottom: '2px' }}>
+                            <button
+                                onClick={() => setHomeOpen(!homeOpen)}
+                                style={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '10px 14px', borderRadius: '10px', fontSize: '14px', fontWeight: 500, border: 'none', backgroundColor: isHomeActive() ? '#eef9ff' : 'transparent', color: isHomeActive() ? '#008ed2' : '#4B5563', cursor: 'pointer', transition: 'all 0.15s', textAlign: 'left' }}
+                            >
+                                <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke={isHomeActive() ? '#008ed2' : '#9ca3af'} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                                        <path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+                                    </svg>
+                                    <span>Home</span>
+                                </div>
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ transform: homeOpen ? 'rotate(180deg)' : 'rotate(0deg)', transition: 'transform 0.2s' }}>
+                                    <polyline points="6 9 12 15 18 9" />
+                                </svg>
+                            </button>
+
+                            {homeOpen && (
+                                <div style={{ paddingLeft: '24px', marginTop: '4px', display: 'flex', flexDirection: 'column', gap: '2px' }}>
+                                     {homeSections.map((sec) => {
+                                        if (sec.label === 'Our Service') {
+                                            const active = isServiceActive();
+                                            return (
+                                                <div key="our-services-dropdown" style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
+                                                    <button
+                                                        type="button"
+                                                        onClick={() => setServicesOpen(!servicesOpen)}
+                                                        style={{
+                                                            display: 'flex',
+                                                            alignItems: 'center',
+                                                            justifyContent: 'space-between',
+                                                            width: '100%',
+                                                            padding: '8px 12px',
+                                                            borderRadius: '8px',
+                                                            fontSize: '13px',
+                                                            fontWeight: 500,
+                                                            border: 'none',
+                                                            backgroundColor: active ? '#f0f9ff' : 'transparent',
+                                                            color: active ? '#008ed2' : '#6b7280',
+                                                            cursor: 'pointer',
+                                                            transition: 'all 0.15s',
+                                                            textAlign: 'left'
+                                                        }}
+                                                    >
+                                                        <span>Our Service</span>
+                                                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ transform: servicesOpen ? 'rotate(180deg)' : 'rotate(0deg)', transition: 'transform 0.2s', color: active ? '#008ed2' : '#9ca3af' }}>
+                                                            <polyline points="6 9 12 15 18 9" />
+                                                        </svg>
+                                                    </button>
+                                                    {servicesOpen && (
+                                                        <div style={{ paddingLeft: '16px', display: 'flex', flexDirection: 'column', gap: '2px', marginTop: '2px' }}>
+                                                            <Link
+                                                                href="/admin/services"
+                                                                style={{
+                                                                    display: 'block',
+                                                                    padding: '6px 12px',
+                                                                    borderRadius: '6px',
+                                                                    fontSize: '12px',
+                                                                    fontWeight: 500,
+                                                                    textDecoration: 'none',
+                                                                    color: window.location.pathname === '/admin/services' ? '#008ed2' : '#6b7280',
+                                                                    backgroundColor: window.location.pathname === '/admin/services' ? '#f0f9ff' : 'transparent',
+                                                                    transition: 'all 0.15s'
+                                                                }}
+                                                            >
+                                                                All Services
+                                                            </Link>
+                                                            {services.map((service) => {
+                                                                const sActive = window.location.pathname === `/admin/services/${service.id}/edit`;
+                                                                return (
+                                                                    <Link
+                                                                        key={service.id}
+                                                                        href={`/admin/services/${service.id}/edit`}
+                                                                        style={{
+                                                                            display: 'block',
+                                                                            padding: '6px 12px',
+                                                                            borderRadius: '6px',
+                                                                            fontSize: '12px',
+                                                                            fontWeight: 500,
+                                                                            textDecoration: 'none',
+                                                                            color: sActive ? '#008ed2' : '#6b7280',
+                                                                            backgroundColor: sActive ? '#f0f9ff' : 'transparent',
+                                                                            transition: 'all 0.15s'
+                                                                        }}
+                                                                    >
+                                                                        {service.title}
+                                                                    </Link>
+                                                                );
+                                                            })}
+                                                        </div>
+                                                    )}
+                                                </div>
+                                            );
+                                        }
+
+                                        if (sec.label === 'Our Training') {
+                                            const active = window.location.pathname === '/admin/company/training';
+                                            return (
+                                                <div key="our-training-dropdown" style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
+                                                    <button
+                                                        type="button"
+                                                        onClick={() => setTrainingOpen(!trainingOpen)}
+                                                        style={{
+                                                            display: 'flex',
+                                                            alignItems: 'center',
+                                                            justifyContent: 'space-between',
+                                                            width: '100%',
+                                                            padding: '8px 12px',
+                                                            borderRadius: '8px',
+                                                            fontSize: '13px',
+                                                            fontWeight: 500,
+                                                            border: 'none',
+                                                            backgroundColor: active ? '#f0f9ff' : 'transparent',
+                                                            color: active ? '#008ed2' : '#6b7280',
+                                                            cursor: 'pointer',
+                                                            transition: 'all 0.15s',
+                                                            textAlign: 'left'
+                                                        }}
+                                                    >
+                                                        <span>Our Training</span>
+                                                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ transform: trainingOpen ? 'rotate(180deg)' : 'rotate(0deg)', transition: 'transform 0.2s', color: active ? '#008ed2' : '#9ca3af' }}>
+                                                            <polyline points="6 9 12 15 18 9" />
+                                                        </svg>
+                                                    </button>
+                                                    {trainingOpen && (
+                                                        <div style={{ paddingLeft: '16px', display: 'flex', flexDirection: 'column', gap: '2px', marginTop: '2px' }}>
+                                                            <Link
+                                                                href="/admin/company/training"
+                                                                style={{
+                                                                    display: 'block',
+                                                                    padding: '6px 12px',
+                                                                    borderRadius: '6px',
+                                                                    fontSize: '12px',
+                                                                    fontWeight: 500,
+                                                                    textDecoration: 'none',
+                                                                    color: active ? '#008ed2' : '#6b7280',
+                                                                    backgroundColor: active ? '#f0f9ff' : 'transparent',
+                                                                    transition: 'all 0.15s'
+                                                                }}
+                                                            >
+                                                                More About Us
+                                                            </Link>
+                                                        </div>
+                                                    )}
+                                                </div>
+                                            );
+                                        }
+
+                                        const active = window.location.pathname + window.location.search === sec.path;
+                                        return (
+                                            <Link
+                                                key={sec.path}
+                                                href={sec.path}
+                                                style={{ display: 'block', padding: '8px 12px', borderRadius: '8px', fontSize: '13px', fontWeight: 500, textDecoration: 'none', color: active ? '#008ed2' : '#6b7280', backgroundColor: active ? '#f0f9ff' : 'transparent', transition: 'all 0.15s' }}
+                                            >
+                                                {sec.label}
+                                            </Link>
+                                        );
+                                    })}
+                                </div>
+                            )}
+                        </div>
+
+                        {/* Users */}
+                        <Link
+                            href="/admin/users"
+                            style={{ display: 'flex', alignItems: 'center', gap: '12px', padding: '10px 14px', marginBottom: '2px', borderRadius: '10px', fontSize: '14px', fontWeight: 500, textDecoration: 'none', color: isActive('/admin/users') ? '#008ed2' : '#4B5563', backgroundColor: isActive('/admin/users') ? '#eef9ff' : 'transparent', transition: 'all 0.15s' }}
+                        >
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke={isActive('/admin/users') ? '#008ed2' : '#9ca3af'} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                                <path d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z" />
+                            </svg>
+                            Users
+                        </Link>
+
+                        {/* Products - Dropdown */}
+                        <div style={{ marginBottom: '2px' }}>
+                            <button
+                                onClick={() => setProductsOpen(!productsOpen)}
+                                style={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '10px 14px', borderRadius: '10px', fontSize: '14px', fontWeight: 500, border: 'none', backgroundColor: isProductActive() ? '#eef9ff' : 'transparent', color: isProductActive() ? '#008ed2' : '#4B5563', cursor: 'pointer', transition: 'all 0.15s', textAlign: 'left' }}
+                            >
+                                <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke={isProductActive() ? '#008ed2' : '#9ca3af'} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                                        <path d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+                                    </svg>
+                                    <span>Products</span>
+                                </div>
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ transform: productsOpen ? 'rotate(180deg)' : 'rotate(0deg)', transition: 'transform 0.2s' }}>
+                                    <polyline points="6 9 12 15 18 9" />
+                                </svg>
+                            </button>
+
+                            {productsOpen && (() => {
+                                // Group products by category
+                                const groups = {};
+                                const ungrouped = [];
+                                products.forEach(p => {
+                                    if (p.category) {
+                                        if (!groups[p.category]) groups[p.category] = [];
+                                        groups[p.category].push(p);
+                                    } else {
+                                        ungrouped.push(p);
+                                    }
+                                });
+                                return (
+                                    <div style={{ paddingLeft: '24px', marginTop: '4px', display: 'flex', flexDirection: 'column', gap: '2px' }}>
+
+                                        {/* Grouped sub-dropdowns */}
+                                        {Object.entries(groups).map(([cat, items]) => {
+                                            const isSubOpen = productSubOpen[cat] !== false;
+                                            const isCatActive = items.some(p => window.location.pathname === `/admin/products/${p.id}/edit`);
+                                            return (
+                                                <div key={cat}>
+                                                    <button
+                                                        type="button"
+                                                        onClick={() => setProductSubOpen(prev => ({ ...prev, [cat]: prev[cat] === false ? true : false }))}
+                                                        style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%', padding: '6px 12px', borderRadius: '6px', fontSize: '12px', fontWeight: 500, border: 'none', backgroundColor: isCatActive ? '#f0f9ff' : 'transparent', color: isCatActive ? '#008ed2' : '#6b7280', cursor: 'pointer', textAlign: 'left', transition: 'all 0.15s' }}
+                                                    >
+                                                        <span>{cat}</span>
+                                                        <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ transform: isSubOpen ? 'rotate(180deg)' : 'rotate(0deg)', transition: 'transform 0.2s', flexShrink: 0 }}>
+                                                            <polyline points="6 9 12 15 18 9" />
+                                                        </svg>
+                                                    </button>
+                                                    {isSubOpen && (
+                                                        <div style={{ paddingLeft: '14px', display: 'flex', flexDirection: 'column', gap: '2px', marginTop: '2px' }}>
+                                                            {items.map(p => {
+                                                                const pActive = window.location.pathname === `/admin/products/${p.id}/edit`;
+                                                                return (
+                                                                    <Link key={p.id} href={`/admin/products/${p.id}/edit`} style={{ display: 'block', padding: '5px 10px', borderRadius: '6px', fontSize: '11px', fontWeight: 500, textDecoration: 'none', color: pActive ? '#008ed2' : '#6b7280', backgroundColor: pActive ? '#f0f9ff' : 'transparent', transition: 'all 0.15s' }}>
+                                                                        {p.title}
+                                                                    </Link>
+                                                                );
+                                                            })}
+                                                        </div>
+                                                    )}
+                                                </div>
+                                            );
+                                        })}
+
+                                        {/* Ungrouped products */}
+                                        {ungrouped.map(p => {
+                                            const pActive = window.location.pathname === `/admin/products/${p.id}/edit`;
+                                            return (
+                                                <Link key={p.id} href={`/admin/products/${p.id}/edit`} style={{ display: 'block', padding: '6px 12px', borderRadius: '6px', fontSize: '12px', fontWeight: 500, textDecoration: 'none', color: pActive ? '#008ed2' : '#6b7280', backgroundColor: pActive ? '#f0f9ff' : 'transparent', transition: 'all 0.15s' }}>
+                                                    {p.title}
+                                                </Link>
+                                            );
+                                        })}
+                                    </div>
+                                );
+                            })()}
+                        </div>
+
+                    </nav>
+                </div>
 
                 <div style={{ padding: '12px', borderTop: '1px solid #e5e7eb' }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '10px', padding: '8px' }}>

@@ -1,25 +1,25 @@
 import AdminLayout from '@/Layouts/AdminLayout';
 import { Head, Link, router } from '@inertiajs/react';
 
-export default function SlidersIndex({ sliders }) {
-    const deleteSlider = (slider) => {
-        if (confirm(`Are you sure you want to delete "${slider.title || 'this slider'}"?`)) {
-            router.delete(route('admin.sliders.destroy', slider.id));
+export default function ServicesIndex({ services }) {
+    const deleteService = (service) => {
+        if (confirm(`Are you sure you want to delete "${service.title}"?`)) {
+            router.delete(route('admin.services.destroy', service.id));
         }
     };
 
     return (
         <AdminLayout>
-            <Head title="Manage Sliders" />
+            <Head title="Manage Services" />
 
             <div style={{ marginBottom: '24px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                 <div>
-                    <h1 style={{ margin: 0, fontSize: '22px', fontWeight: 700, color: '#111827' }}>Sliders</h1>
-                    <p style={{ margin: '4px 0 0', fontSize: '14px', color: '#6b7280' }}>Manage homepage slider content</p>
+                    <h1 style={{ margin: 0, fontSize: '22px', fontWeight: 700, color: '#111827' }}>Services</h1>
+                    <p style={{ margin: '4px 0 0', fontSize: '14px', color: '#6b7280' }}>Manage dynamic homepage services</p>
                 </div>
-                <Link href="/admin/sliders/create" style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', padding: '10px 20px', borderRadius: '10px', backgroundColor: '#008ed2', color: '#fff', textDecoration: 'none', fontSize: '13px', fontWeight: 600 }}>
+                <Link href={route('admin.services.create')} style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', padding: '10px 20px', borderRadius: '10px', backgroundColor: '#008ed2', color: '#fff', textDecoration: 'none', fontSize: '13px', fontWeight: 600 }}>
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"><path d="M12 4.5v15m7.5-7.5h-15"/></svg>
-                    Add Slider
+                    Add Service
                 </Link>
             </div>
 
@@ -28,7 +28,7 @@ export default function SlidersIndex({ sliders }) {
                     <span style={{ fontSize: '13px', color: '#4b5563', fontWeight: 500 }}>Show</span>
                     <select 
                         className="ignore"
-                        value={sliders.per_page || 10} 
+                        value={services.per_page || 10} 
                         onChange={(e) => {
                             const query = new URLSearchParams(window.location.search);
                             query.set('per_page', e.target.value);
@@ -76,50 +76,42 @@ export default function SlidersIndex({ sliders }) {
                     <table style={{ width: '100%', borderCollapse: 'collapse' }}>
                         <thead>
                             <tr style={{ backgroundColor: '#f9fafb' }}>
-                                <th style={{ padding: '12px 20px', textAlign: 'left', fontSize: '11px', fontWeight: 600, color: '#6b7280', textTransform: 'uppercase', letterSpacing: '0.5px' }}>#</th>
-                                <th style={{ padding: '12px 20px', textAlign: 'left', fontSize: '11px', fontWeight: 600, color: '#6b7280', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Background Image</th>
-                                <th style={{ padding: '12px 20px', textAlign: 'left', fontSize: '11px', fontWeight: 600, color: '#6b7280', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Hero Image</th>
+                                <th style={{ padding: '12px 20px', textAlign: 'left', fontSize: '11px', fontWeight: 600, color: '#6b7280', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Icon</th>
+                                <th style={{ padding: '12px 20px', textAlign: 'left', fontSize: '11px', fontWeight: 600, color: '#6b7280', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Image</th>
                                 <th style={{ padding: '12px 20px', textAlign: 'left', fontSize: '11px', fontWeight: 600, color: '#6b7280', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Title</th>
-                                <th style={{ padding: '12px 20px', textAlign: 'left', fontSize: '11px', fontWeight: 600, color: '#6b7280', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Subtitle</th>
+                                <th style={{ padding: '12px 20px', textAlign: 'left', fontSize: '11px', fontWeight: 600, color: '#6b7280', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Link</th>
                                 <th style={{ padding: '12px 20px', textAlign: 'center', fontSize: '11px', fontWeight: 600, color: '#6b7280', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Order</th>
                                 <th style={{ padding: '12px 20px', textAlign: 'center', fontSize: '11px', fontWeight: 600, color: '#6b7280', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Active</th>
                                 <th style={{ padding: '12px 20px', textAlign: 'right', fontSize: '11px', fontWeight: 600, color: '#6b7280', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Actions</th>
                             </tr>
                         </thead>
                         <tbody>
-                            {sliders.data.map((slider) => (
-                                <tr key={slider.id} style={{ borderTop: '1px solid #f3f4f6' }}>
-                                    <td style={{ padding: '14px 20px', fontSize: '13px', color: '#9ca3af' }}>{slider.id}</td>
+                            {services.data.map((s) => (
+                                <tr key={s.id} style={{ borderTop: '1px solid #f3f4f6' }}>
+                                    <td style={{ padding: '14px 20px', fontSize: '16px' }}><i className={s.icon || 'fa fa-cog'}></i></td>
                                     <td style={{ padding: '14px 20px' }}>
-                                        {slider.bg_image ? (
-                                            <img src={`/storage/${slider.bg_image}`} alt="" style={{ width: '80px', height: '45px', borderRadius: '6px', objectFit: 'cover', border: '1px solid #e5e7eb' }} />
+                                        {s.image ? (
+                                            <img src={s.image.startsWith('http') || s.image.startsWith('/') ? s.image : s.image.startsWith('assets/') ? `/${s.image}` : `/storage/${s.image}`} alt="" style={{ width: '80px', height: '45px', borderRadius: '6px', objectFit: 'cover', border: '1px solid #e5e7eb' }} />
                                         ) : (
                                             <span style={{ fontSize: '12px', color: '#9ca3af' }}>No image</span>
                                         )}
                                     </td>
-                                    <td style={{ padding: '14px 20px' }}>
-                                        {slider.slide_image ? (
-                                            <img src={`/storage/${slider.slide_image}`} alt="" style={{ width: '80px', height: '45px', borderRadius: '6px', objectFit: 'cover', border: '1px solid #e5e7eb' }} />
-                                        ) : (
-                                            <span style={{ fontSize: '12px', color: '#9ca3af' }}>No image</span>
-                                        )}
-                                    </td>
-                                    <td style={{ padding: '14px 20px', fontSize: '13px', fontWeight: 500, color: '#111827' }}>{slider.title || '-'}</td>
-                                    <td style={{ padding: '14px 20px', fontSize: '13px', color: '#6b7280' }}>{slider.subtitle || '-'}</td>
-                                    <td style={{ padding: '14px 20px', textAlign: 'center', fontSize: '13px', color: '#6b7280' }}>{slider.sort_order}</td>
+                                    <td style={{ padding: '14px 20px', fontSize: '13px', fontWeight: 500, color: '#111827' }}>{s.title}</td>
+                                    <td style={{ padding: '14px 20px', fontSize: '13px', color: '#6b7280' }}>{s.link || '-'}</td>
+                                    <td style={{ padding: '14px 20px', textAlign: 'center', fontSize: '13px', color: '#6b7280' }}>{s.sort_order}</td>
                                     <td style={{ padding: '14px 20px', textAlign: 'center' }}>
-                                        <span style={{ display: 'inline-block', padding: '3px 10px', borderRadius: '20px', fontSize: '11px', fontWeight: 600, backgroundColor: slider.is_active ? '#ecfdf5' : '#fef2f2', color: slider.is_active ? '#065f46' : '#dc2626' }}>
-                                            {slider.is_active ? 'Yes' : 'No'}
+                                        <span style={{ display: 'inline-block', padding: '3px 10px', borderRadius: '20px', fontSize: '11px', fontWeight: 600, backgroundColor: s.is_active ? '#ecfdf5' : '#fef2f2', color: s.is_active ? '#065f46' : '#dc2626' }}>
+                                            {s.is_active ? 'Yes' : 'No'}
                                         </span>
                                     </td>
                                     <td style={{ padding: '14px 20px', textAlign: 'right', whiteSpace: 'nowrap' }}>
-                                        <Link href={`/admin/sliders/${slider.id}/edit`} style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: '32px', height: '32px', borderRadius: '8px', backgroundColor: '#eef9ff', color: '#008ed2', textDecoration: 'none', marginRight: '8px', transition: 'all 0.15s' }} title="Edit">
+                                        <Link href={route('admin.services.edit', s.id)} style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: '32px', height: '32px', borderRadius: '8px', backgroundColor: '#eef9ff', color: '#008ed2', textDecoration: 'none', marginRight: '8px', transition: 'all 0.15s' }} title="Edit">
                                             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                                                 <path d="M12 20h9"></path>
                                                 <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path>
                                             </svg>
                                         </Link>
-                                        <button onClick={() => deleteSlider(slider)} style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: '32px', height: '32px', borderRadius: '8px', backgroundColor: '#fef2f2', color: '#dc2626', border: 'none', cursor: 'pointer', transition: 'all 0.15s' }} title="Delete">
+                                        <button onClick={() => deleteService(s)} style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: '32px', height: '32px', borderRadius: '8px', backgroundColor: '#fef2f2', color: '#dc2626', border: 'none', cursor: 'pointer', transition: 'all 0.15s' }} title="Delete">
                                             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                                                 <polyline points="3 6 5 6 21 6"></polyline>
                                                 <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
@@ -130,19 +122,19 @@ export default function SlidersIndex({ sliders }) {
                                     </td>
                                 </tr>
                             ))}
-                            {sliders.data.length === 0 && (
-                                <tr><td colSpan={8} style={{ padding: '40px', textAlign: 'center', color: '#9ca3af', fontSize: '13px' }}>No sliders found.</td></tr>
+                            {services.data.length === 0 && (
+                                <tr><td colSpan={7} style={{ padding: '40px', textAlign: 'center', color: '#9ca3af', fontSize: '13px' }}>No services found.</td></tr>
                             )}
                         </tbody>
                     </table>
                 </div>
             </div>
 
-            {sliders.last_page > 1 && (
+            {services.last_page > 1 && (
                 <div style={{ marginTop: '20px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                    <p style={{ margin: 0, fontSize: '13px', color: '#6b7280' }}>Showing {sliders.from}–{sliders.to} of {sliders.total}</p>
+                    <p style={{ margin: 0, fontSize: '13px', color: '#6b7280' }}>Showing {services.from}–{services.to} of {services.total}</p>
                     <div style={{ display: 'flex', gap: '4px' }}>
-                        {sliders.links.map((link, i) => (
+                        {services.links.map((link, i) => (
                             <button key={i} disabled={!link.url} onClick={() => link.url && router.get(link.url)} style={{ padding: '6px 12px', borderRadius: '6px', fontSize: '12px', fontWeight: 500, border: '1px solid #e5e7eb', backgroundColor: link.active ? '#008ed2' : '#fff', color: link.active ? '#fff' : link.url ? '#374151' : '#d1d5db', cursor: link.url ? 'pointer' : 'not-allowed' }} dangerouslySetInnerHTML={{ __html: link.label }} />
                         ))}
                     </div>

@@ -25,6 +25,8 @@ class HandleInertiaRequests extends Middleware
                 'success' => $request->session()->get('success'),
                 'error' => $request->session()->get('error'),
             ],
+            'services' => \App\Models\Service::orderBy('sort_order')->get(['id', 'title']),
+            'sidebarProducts' => \App\Models\Product::where('is_active', true)->orderBy('sort_order')->get(['id', 'title', 'category', 'link']),
         ];
     }
 }

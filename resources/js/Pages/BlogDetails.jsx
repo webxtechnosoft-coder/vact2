@@ -126,7 +126,7 @@ export default function BlogDetails() {
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-xl-6 col-lg-6 col-md-12" style="">
+                            <div class="col-xl-6 col-lg-6 col-md-12">
                                 <div class="testimonial-one__single"
                                     style={{ "background": "transparent !important", "boxShadow": "none !important", "paddingLeft": "30px" }}>
                                     <div
