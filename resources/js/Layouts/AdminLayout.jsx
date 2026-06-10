@@ -36,7 +36,7 @@ export default function AdminLayout({ children }) {
             children: [
                 { label: 'About Us', path: '/admin/about' },
                 { label: 'Blog', path: '/admin/blogs' },
-                { label: 'Testimonials', path: '/admin/testimonials' },
+                { label: 'Video Testimonials', path: '/admin/testimonials' },
                 { label: 'Gallery', path: '/admin/galleries' },
             ],
         },
@@ -56,6 +56,7 @@ export default function AdminLayout({ children }) {
         { label: 'Applications', path: '/admin/applications', icon: 'M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z' },
         { label: 'Contact', path: '/admin/contact', icon: 'M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z' },
         { label: 'Users', path: '/admin/users', icon: 'M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z' },
+    ];
     const isHomeActive = () => {
         const path = window.location.pathname;
         return path.startsWith('/admin/sliders') ||
@@ -66,11 +67,14 @@ export default function AdminLayout({ children }) {
                path.startsWith('/admin/partners') ||
                path.startsWith('/admin/blogs') ||
                path.startsWith('/admin/faqs') ||
-               path.startsWith('/admin/testimonials');
+               path.startsWith('/admin/testimonials') ||
+               path.startsWith('/admin/google-reviews');
     };
 
-    const services = usePage().props.services || [];
-    const products = usePage().props.sidebarProducts || [];
+    const rawServices = usePage().props.services || [];
+    const services = Array.isArray(rawServices) ? rawServices : (rawServices?.data || []);
+    const rawProducts = usePage().props.sidebarProducts || [];
+    const products = Array.isArray(rawProducts) ? rawProducts : (rawProducts?.data || []);
     const isServiceActive = () => {
         return window.location.pathname.startsWith('/admin/services');
     };
@@ -98,7 +102,7 @@ export default function AdminLayout({ children }) {
         { label: 'How It Works', path: '/admin/company/how-it-works' },
         { label: 'Blogs', path: '/admin/blogs' },
         { label: 'FAQ', path: '/admin/faqs' },
-        { label: 'Testimonial', path: '/admin/testimonials' }
+        { label: 'Google Reviews', path: '/admin/google-reviews' }
     ];
 
 

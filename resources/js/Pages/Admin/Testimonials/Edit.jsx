@@ -14,7 +14,7 @@ export default function TestimonialsEdit({ testimonial }) {
 
     const submit = (e) => {
         e.preventDefault();
-        router.post(route('admin.testimonials.update', testimonial.id), {
+        router.post(route('admin.google_reviews.update', testimonial.id), {
             _method: 'PUT',
             ...data,
             forceFormData: true,
@@ -23,11 +23,11 @@ export default function TestimonialsEdit({ testimonial }) {
 
     return (
         <AdminLayout>
-            <Head title="Edit Testimonial" />
+            <Head title="Edit Google Review" />
 
             <div style={{ marginBottom: '24px' }}>
-                <h1 style={{ margin: 0, fontSize: '22px', fontWeight: 700, color: '#111827' }}>Edit Testimonial</h1>
-                <p style={{ margin: '4px 0 0', fontSize: '14px', color: '#6b7280' }}>Modify details of an existing client testimonial</p>
+                <h1 style={{ margin: 0, fontSize: '22px', fontWeight: 700, color: '#111827' }}>Edit Google Review</h1>
+                <p style={{ margin: '4px 0 0', fontSize: '14px', color: '#6b7280' }}>Modify details of an existing client Google review</p>
             </div>
 
             <div style={{ backgroundColor: '#fff', borderRadius: '12px', padding: '32px', border: '1px solid #e5e7eb', boxShadow: '0 1px 3px rgba(0,0,0,0.04)' }}>
@@ -91,7 +91,7 @@ export default function TestimonialsEdit({ testimonial }) {
                         <button type="submit" disabled={processing} style={{ padding: '10px 24px', borderRadius: '10px', backgroundColor: '#008ed2', color: '#fff', border: 'none', fontSize: '14px', fontWeight: 600, cursor: processing ? 'not-allowed' : 'pointer' }}>
                             Save Changes
                         </button>
-                        <Link href={route('admin.testimonials')} style={{ padding: '10px 24px', borderRadius: '10px', border: '1px solid #d1d5db', backgroundColor: '#fff', color: '#374151', textDecoration: 'none', fontSize: '14px', fontWeight: 500 }}>
+                        <Link href={route('admin.google_reviews')} style={{ padding: '10px 24px', borderRadius: '10px', border: '1px solid #d1d5db', backgroundColor: '#fff', color: '#374151', textDecoration: 'none', fontSize: '14px', fontWeight: 500 }}>
                             Cancel
                         </Link>
                     </div>

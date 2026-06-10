@@ -13,10 +13,8 @@ use App\Models\Slider;
 use App\Models\Testimonial;
 use App\Models\User;
 use App\Models\Product;
-use App\Models\Service;
 use App\Models\Placement;
 use App\Models\Partner;
-use App\Models\Blog;
 use App\Models\Faq;
 use App\Models\GoogleReview;
 use Illuminate\Http\RedirectResponse;
@@ -318,20 +316,28 @@ class AdminController extends Controller
         return redirect()->back()->with('success', 'About page content updated successfully.');
     }
 
-    public function editService($slug)
+    public function editService($idOrSlug)
     {
-        $service = Service::where('slug', $slug)->firstOrFail();
+        if (is_numeric($idOrSlug)) {
+            $service = Service::findOrFail($idOrSlug);
+        } else {
+            $service = Service::where('slug', $idOrSlug)->firstOrFail();
+        }
         return Inertia::render('Admin/Services/Edit', [
             'service' => $service,
         ]);
     }
 
-    public function updateService(Request $request, $slug)
+    public function updateService(Request $request, $idOrSlug)
     {
-        $service = Service::where('slug', $slug)->firstOrFail();
+        if (is_numeric($idOrSlug)) {
+            $service = Service::findOrFail($idOrSlug);
+        } else {
+            $service = Service::where('slug', $idOrSlug)->firstOrFail();
+        }
 
         $request->validate([
-            'title' => 'nullable|string|max:500',
+            'title' => 'required|string|max:500',
             'subtitle' => 'nullable|string',
             'description' => 'nullable|string',
             'badge' => 'nullable|string|max:255',
@@ -344,37 +350,48 @@ class AdminController extends Controller
             'slides.*.highlight' => 'nullable|string|max:500',
             'slides.*.description' => 'nullable|string',
             'page_data' => 'nullable|array',
+            'icon' => 'nullable|string|max:255',
+            'link' => 'nullable|string|max:255',
+            'sort_order' => 'nullable|integer|min:0',
+            'is_active' => 'nullable|boolean',
+            'page_content' => 'nullable|string',
         ]);
 
         $data = [];
-        foreach (['title', 'subtitle', 'description', 'badge', 'features'] as $field) {
+        foreach (['title', 'subtitle', 'description', 'badge', 'features', 'icon', 'link', 'sort_order', 'page_content'] as $field) {
             if ($request->exists($field)) {
                 $data[$field] = $request->input($field);
             }
         }
 
-        $slides = $request->input('slides', []);
-        $oldSlides = $service->slides ?? [];
-        $oldImages = array_filter(array_column($oldSlides, 'image'));
-        foreach ($slides as $i => &$slide) {
-            $file = $request->file("slides.$i.image");
-            if ($file) {
-                $oldImage = $oldSlides[$i]['image'] ?? null;
-                if ($oldImage && Storage::disk('public')->exists($oldImage)) {
-                    Storage::disk('public')->delete($oldImage);
+        if ($request->exists('is_active')) {
+            $data['is_active'] = $request->boolean('is_active');
+        }
+
+        if ($request->exists('slides')) {
+            $slides = $request->input('slides', []);
+            $oldSlides = $service->slides ?? [];
+            $oldImages = array_filter(array_column($oldSlides, 'image'));
+            foreach ($slides as $i => &$slide) {
+                $file = $request->file("slides.$i.image");
+                if ($file) {
+                    $oldImage = $oldSlides[$i]['image'] ?? null;
+                    if ($oldImage && Storage::disk('public')->exists($oldImage)) {
+                        Storage::disk('public')->delete($oldImage);
+                    }
+                    $slide['image'] = $file->store('services/slides', 'public');
+                } elseif (!isset($slide['image']) || empty($slide['image'])) {
+                    $slide['image'] = $oldSlides[$i]['image'] ?? '';
                 }
-                $slide['image'] = $file->store('services/slides', 'public');
-            } elseif (!isset($slide['image']) || empty($slide['image'])) {
-                $slide['image'] = $oldSlides[$i]['image'] ?? '';
             }
-        }
-        $newImages = array_filter(array_column($slides, 'image'));
-        foreach ($oldImages as $oldImg) {
-            if (!in_array($oldImg, $newImages) && Storage::disk('public')->exists($oldImg)) {
-                Storage::disk('public')->delete($oldImg);
+            $newImages = array_filter(array_column($slides, 'image'));
+            foreach ($oldImages as $oldImg) {
+                if (!in_array($oldImg, $newImages) && Storage::disk('public')->exists($oldImg)) {
+                    Storage::disk('public')->delete($oldImg);
+                }
             }
+            $data['slides'] = $slides;
         }
-        $data['slides'] = $slides;
 
         if ($request->exists('image') && $request->hasFile('image')) {
             if ($service->image) {
@@ -384,27 +401,29 @@ class AdminController extends Controller
         }
 
         // handle page_data with image uploads
-        $pageData = $request->input('page_data', []);
-        $oldPageData = $service->page_data ?? [];
-        if (!empty($pageData) && $service->slug === 'embedded-systems') {
-            foreach (['vehicle_networking', 'hmi', 'last_mile'] as $section) {
-                if (isset($pageData[$section]['image']) && is_string($pageData[$section]['image']) && str_starts_with($pageData[$section]['image'], 'tmp/')) {
-                    $pageData[$section]['image'] = '';
-                }
-                $fileKey = "page_data.{$section}.image";
-                $file = $request->file($fileKey);
-                if ($file) {
-                    $oldImg = $oldPageData[$section]['image'] ?? null;
-                    if ($oldImg && Storage::disk('public')->exists($oldImg)) {
-                        Storage::disk('public')->delete($oldImg);
+        if ($request->exists('page_data')) {
+            $pageData = $request->input('page_data', []);
+            $oldPageData = $service->page_data ?? [];
+            if (!empty($pageData) && $service->slug === 'embedded-systems') {
+                foreach (['vehicle_networking', 'hmi', 'last_mile'] as $section) {
+                    if (isset($pageData[$section]['image']) && is_string($pageData[$section]['image']) && str_starts_with($pageData[$section]['image'], 'tmp/')) {
+                        $pageData[$section]['image'] = '';
                     }
-                    $pageData[$section]['image'] = $file->store('services/page_data', 'public');
-                } elseif (empty($pageData[$section]['image']) && isset($oldPageData[$section]['image'])) {
-                    $pageData[$section]['image'] = $oldPageData[$section]['image'];
+                    $fileKey = "page_data.{$section}.image";
+                    $file = $request->file($fileKey);
+                    if ($file) {
+                        $oldImg = $oldPageData[$section]['image'] ?? null;
+                        if ($oldImg && Storage::disk('public')->exists($oldImg)) {
+                            Storage::disk('public')->delete($oldImg);
+                        }
+                        $pageData[$section]['image'] = $file->store('services/page_data', 'public');
+                    } elseif (empty($pageData[$section]['image']) && isset($oldPageData[$section]['image'])) {
+                        $pageData[$section]['image'] = $oldPageData[$section]['image'];
+                    }
                 }
             }
+            $data['page_data'] = $pageData;
         }
-        $data['page_data'] = $pageData;
 
         $service->update($data);
 
@@ -809,6 +828,19 @@ class AdminController extends Controller
             'tags' => 'nullable|array',
             'tags.*' => 'string|max:100',
             'date' => 'nullable|string|max:100',
+            'sort_order' => 'nullable|integer|min:0',
+            'is_active' => 'nullable|boolean',
+        ]);
+
+        $data = $request->only(['title', 'description', 'icon', 'experience', 'location', 'tags', 'date', 'sort_order', 'is_active']);
+        $data['type'] = 'job';
+        $data['sort_order'] = $request->sort_order ?? 0;
+        $data['is_active'] = $request->boolean('is_active');
+
+        Career::create($data);
+
+        return redirect()->route('admin.careers')->with('success', 'Job added successfully.');
+    }
     private function getSectionKey($section)
     {
         $map = [
@@ -1037,37 +1069,6 @@ class AdminController extends Controller
         return redirect()->route('admin.services')->with('success', 'Service created successfully.');
     }
 
-    public function editService(Service $service): Response
-    {
-        return Inertia::render('Admin/Services/Edit', ['service' => $service]);
-    }
-
-    public function updateService(Request $request, Service $service): RedirectResponse
-    {
-        $request->validate([
-            'title' => 'required|string|max:255',
-            'description' => 'nullable|string',
-            'icon' => 'nullable|string|max:255',
-            'image' => 'nullable|image|max:2048',
-            'link' => 'nullable|string|max:255',
-            'sort_order' => 'nullable|integer|min:0',
-            'is_active' => 'nullable|boolean',
-            'page_content' => 'nullable|string',
-        ]);
-
-        $data = $request->only(['title', 'description', 'icon', 'link', 'sort_order', 'is_active', 'page_content']);
-
-        if ($request->hasFile('image')) {
-            if ($service->image) {
-                Storage::disk('public')->delete($service->image);
-            }
-            $data['image'] = $request->file('image')->store('services', 'public');
-        }
-
-        $service->update($data);
-
-        return redirect()->route('admin.services')->with('success', 'Service updated successfully.');
-    }
 
     public function destroyService(Service $service): RedirectResponse
     {
@@ -1235,85 +1236,7 @@ class AdminController extends Controller
         return redirect()->route('admin.partners', ['type' => $type])->with('success', 'Logo deleted successfully.');
     }
 
-    // ---------------- BLOGS CRUD ----------------
 
-    public function blogs(): Response
-    {
-        $blogs = Blog::orderBy('created_at', 'desc')->paginate(request()->input('per_page', 10))->withQueryString();
-        return Inertia::render('Admin/Blogs/Index', ['blogs' => $blogs]);
-    }
-
-    public function createBlog(): Response
-    {
-        return Inertia::render('Admin/Blogs/Create');
-    }
-
-    public function storeBlog(Request $request): RedirectResponse
-    {
-        $request->validate([
-            'title' => 'required|string|max:255',
-            'excerpt' => 'nullable|string',
-            'content' => 'nullable|string',
-            'image' => 'nullable|image|max:2048',
-            'author' => 'nullable|string|max:255',
-            'published_at' => 'nullable|date',
-            'is_active' => 'nullable|boolean',
-        ]);
-
-        $data = $request->only(['title', 'excerpt', 'content', 'author', 'published_at', 'is_active']);
-        $data['slug'] = Str::slug($request->title) . '-' . time();
-
-        if ($request->hasFile('image')) {
-            $data['image'] = $request->file('image')->store('blogs', 'public');
-        }
-
-        Blog::create($data);
-
-        return redirect()->route('admin.blogs')->with('success', 'Blog created successfully.');
-    }
-
-    public function editBlog(Blog $blog): Response
-    {
-        return Inertia::render('Admin/Blogs/Edit', ['blog' => $blog]);
-    }
-
-    public function updateBlog(Request $request, Blog $blog): RedirectResponse
-    {
-        $request->validate([
-            'title' => 'required|string|max:255',
-            'excerpt' => 'nullable|string',
-            'content' => 'nullable|string',
-            'image' => 'nullable|image|max:2048',
-            'author' => 'nullable|string|max:255',
-            'published_at' => 'nullable|date',
-            'is_active' => 'nullable|boolean',
-        ]);
-
-        $data = $request->only(['title', 'excerpt', 'content', 'author', 'published_at', 'is_active']);
-        if ($blog->title !== $request->title) {
-            $data['slug'] = Str::slug($request->title) . '-' . time();
-        }
-
-        if ($request->hasFile('image')) {
-            if ($blog->image) {
-                Storage::disk('public')->delete($blog->image);
-            }
-            $data['image'] = $request->file('image')->store('blogs', 'public');
-        }
-
-        $blog->update($data);
-
-        return redirect()->route('admin.blogs')->with('success', 'Blog updated successfully.');
-    }
-
-    public function destroyBlog(Blog $blog): RedirectResponse
-    {
-        if ($blog->image) {
-            Storage::disk('public')->delete($blog->image);
-        }
-        $blog->delete();
-        return redirect()->route('admin.blogs')->with('success', 'Blog deleted successfully.');
-    }
 
     // ---------------- FAQS CRUD ----------------
 
@@ -1337,14 +1260,9 @@ class AdminController extends Controller
             'is_active' => 'nullable|boolean',
         ]);
 
-        $data = $request->only(['title', 'description', 'icon', 'experience', 'location', 'tags', 'date', 'sort_order', 'is_active']);
-        $data['type'] = 'job';
-        $data['sort_order'] = $request->sort_order ?? 0;
-        $data['is_active'] = $request->boolean('is_active');
+        Faq::create($request->only(['question', 'answer', 'sort_order', 'is_active']));
 
-        Career::create($data);
-
-        return redirect()->route('admin.careers')->with('success', 'Job added successfully.');
+        return redirect()->route('admin.faqs')->with('success', 'FAQ created successfully.');
     }
 
     public function updateCareer(Request $request, Career $career)
@@ -1358,9 +1276,16 @@ class AdminController extends Controller
             'tags' => 'nullable|array',
             'tags.*' => 'string|max:100',
             'date' => 'nullable|string|max:100',
-        Faq::create($request->only(['question', 'answer', 'sort_order', 'is_active']));
+            'sort_order' => 'nullable|integer|min:0',
+            'is_active' => 'nullable|boolean',
+        ]);
 
-        return redirect()->route('admin.faqs')->with('success', 'FAQ created successfully.');
+        $data = $request->only(['title', 'description', 'icon', 'experience', 'location', 'tags', 'date', 'sort_order', 'is_active']);
+        $data['is_active'] = $request->boolean('is_active');
+
+        $career->update($data);
+
+        return redirect()->route('admin.careers')->with('success', 'Job updated successfully.');
     }
 
     public function editFaq(Faq $faq): Response
@@ -1377,12 +1302,9 @@ class AdminController extends Controller
             'is_active' => 'nullable|boolean',
         ]);
 
-        $data = $request->only(['title', 'description', 'icon', 'experience', 'location', 'tags', 'date', 'sort_order', 'is_active']);
-        $data['is_active'] = $request->boolean('is_active');
+        $faq->update($request->only(['question', 'answer', 'sort_order', 'is_active']));
 
-        $career->update($data);
-
-        return redirect()->route('admin.careers')->with('success', 'Job updated successfully.');
+        return redirect()->route('admin.faqs')->with('success', 'FAQ updated successfully.');
     }
 
     public function destroyCareer(Career $career)
@@ -1439,9 +1361,6 @@ class AdminController extends Controller
     {
         $message->delete();
         return redirect()->route('admin.contact')->with('success', 'Message deleted.');
-        $faq->update($request->only(['question', 'answer', 'sort_order', 'is_active']));
-
-        return redirect()->route('admin.faqs')->with('success', 'FAQ updated successfully.');
     }
 
     public function destroyFaq(Faq $faq): RedirectResponse
@@ -1450,20 +1369,20 @@ class AdminController extends Controller
         return redirect()->route('admin.faqs')->with('success', 'FAQ deleted successfully.');
     }
 
-    // ---------------- TESTIMONIALS CRUD ----------------
+    // ---------------- GOOGLE REVIEWS CRUD ----------------
 
-    public function testimonials(): Response
+    public function googleReviews(): Response
     {
         $testimonials = GoogleReview::orderBy('sort_order')->paginate(request()->input('per_page', 10))->withQueryString();
         return Inertia::render('Admin/Testimonials/Index', ['testimonials' => $testimonials]);
     }
 
-    public function createTestimonial(): Response
+    public function createGoogleReview(): Response
     {
         return Inertia::render('Admin/Testimonials/Create');
     }
 
-    public function storeTestimonial(Request $request): RedirectResponse
+    public function storeGoogleReview(Request $request): RedirectResponse
     {
         $request->validate([
             'name' => 'required|string|max:255',
@@ -1483,15 +1402,15 @@ class AdminController extends Controller
 
         GoogleReview::create($data);
 
-        return redirect()->route('admin.testimonials')->with('success', 'Testimonial created successfully.');
+        return redirect()->route('admin.google_reviews')->with('success', 'Google review created successfully.');
     }
 
-    public function editTestimonial(GoogleReview $testimonial): Response
+    public function editGoogleReview(GoogleReview $googleReview): Response
     {
-        return Inertia::render('Admin/Testimonials/Edit', ['testimonial' => $testimonial]);
+        return Inertia::render('Admin/Testimonials/Edit', ['testimonial' => $googleReview]);
     }
 
-    public function updateTestimonial(Request $request, GoogleReview $testimonial): RedirectResponse
+    public function updateGoogleReview(Request $request, GoogleReview $googleReview): RedirectResponse
     {
         $request->validate([
             'name' => 'required|string|max:255',
@@ -1506,23 +1425,23 @@ class AdminController extends Controller
         $data = $request->only(['name', 'role', 'text', 'rating', 'sort_order', 'is_active']);
 
         if ($request->hasFile('image')) {
-            if ($testimonial->image) {
-                Storage::disk('public')->delete($testimonial->image);
+            if ($googleReview->image) {
+                Storage::disk('public')->delete($googleReview->image);
             }
             $data['image'] = $request->file('image')->store('testimonials', 'public');
         }
 
-        $testimonial->update($data);
+        $googleReview->update($data);
 
-        return redirect()->route('admin.testimonials')->with('success', 'Testimonial updated successfully.');
+        return redirect()->route('admin.google_reviews')->with('success', 'Google review updated successfully.');
     }
 
-    public function destroyTestimonial(GoogleReview $testimonial): RedirectResponse
+    public function destroyGoogleReview(GoogleReview $googleReview): RedirectResponse
     {
-        if ($testimonial->image) {
-            Storage::disk('public')->delete($testimonial->image);
+        if ($googleReview->image) {
+            Storage::disk('public')->delete($googleReview->image);
         }
-        $testimonial->delete();
-        return redirect()->route('admin.testimonials')->with('success', 'Testimonial deleted successfully.');
+        $googleReview->delete();
+        return redirect()->route('admin.google_reviews')->with('success', 'Google review deleted successfully.');
     }
 }

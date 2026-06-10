@@ -126,20 +126,18 @@ export default function BlogDetails() {
                                     </div>
                                 </div>
                             </div>
-                            <div className="col-xl-6 col-lg-6 col-md-12" style="">
+                            <div className="col-xl-6 col-lg-6 col-md-12">
                                 <div className="testimonial-one__single"
-                            <div class="col-xl-6 col-lg-6 col-md-12">
-                                <div class="testimonial-one__single"
-                                    style={{ "background": "transparent !important", "boxShadow": "none !important", "paddingLeft": "30px" }}>
+                                    style={{ background: 'transparent', boxShadow: 'none', paddingLeft: '30px' }}>
                                     <div
-                                        style={{ "width": "60px", "height": "60px", "background": "#008ed2", "borderRadius": "50%", "display": "flex", "alignItems": "center", "justifyContent": "center", "marginBottom": "20px" }}>
-                                        <i className="fas fa-quote-left" style={{ "color": "#fff", "fontSize": "24px" }}></i>
+                                        style={{ width: '60px', height: '60px', background: '#008ed2', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '20px' }}>
+                                        <i className="fas fa-quote-left" style={{ color: '#fff', fontSize: '24px' }}></i>
                                     </div>
-                                    <h2 style={{ "fontSize": "32px", "fontWeight": "700", "color": "#fff", "marginBottom": "15px" }}>
-                                        VAct Technologies <br /><span style={{ "color": "#008ed2" }}>Transforming Ideas</span>
+                                    <h2 style={{ fontSize: '32px', fontWeight: '700', color: '#fff', marginBottom: '15px' }}>
+                                        VAct Technologies <br /><span style={{ color: '#008ed2' }}>Transforming Ideas</span>
                                     </h2>
                                     <p className="testimonial-one__text"
-                                        style={{ "fontSize": "15px", "lineHeight": "1.8", "color": "#a0aec0" }}>VAct Technologies
+                                        style={{ fontSize: '15px', lineHeight: '1.8', color: '#a0aec0' }}>VAct Technologies
                                         transforms innovative ideas into complete product solutions with advanced design
                                         and development services. We deliver efficient solutions for industrial,
                                         automation, and embedded applications using modern and reliable technology. From
@@ -148,7 +146,6 @@ export default function BlogDetails() {
                                 </div>
                             </div>
                             <div className="col-xl-1 col-lg-1 col-md-12 d-flex justify-content-center">
-
                             </div>
                         </div>
                     </div>

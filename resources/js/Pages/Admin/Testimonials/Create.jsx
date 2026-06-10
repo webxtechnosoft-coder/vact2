@@ -14,18 +14,18 @@ export default function TestimonialsCreate() {
 
     const submit = (e) => {
         e.preventDefault();
-        post(route('admin.testimonials.store'), {
+        post(route('admin.google_reviews.store'), {
             forceFormData: true,
         });
     };
 
     return (
         <AdminLayout>
-            <Head title="Add Testimonial" />
+            <Head title="Add Google Review" />
 
             <div style={{ marginBottom: '24px' }}>
-                <h1 style={{ margin: 0, fontSize: '22px', fontWeight: 700, color: '#111827' }}>Add Testimonial</h1>
-                <p style={{ margin: '4px 0 0', fontSize: '14px', color: '#6b7280' }}>Create a new client review or testimonial</p>
+                <h1 style={{ margin: 0, fontSize: '22px', fontWeight: 700, color: '#111827' }}>Add Google Review</h1>
+                <p style={{ margin: '4px 0 0', fontSize: '14px', color: '#6b7280' }}>Create a new client review or Google review</p>
             </div>
 
             <div style={{ backgroundColor: '#fff', borderRadius: '12px', padding: '32px', border: '1px solid #e5e7eb', boxShadow: '0 1px 3px rgba(0,0,0,0.04)' }}>
@@ -82,9 +82,9 @@ export default function TestimonialsCreate() {
 
                     <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginTop: '32px' }}>
                         <button type="submit" disabled={processing} style={{ padding: '10px 24px', borderRadius: '10px', backgroundColor: '#008ed2', color: '#fff', border: 'none', fontSize: '14px', fontWeight: 600, cursor: processing ? 'not-allowed' : 'pointer' }}>
-                            Create Testimonial
+                            Create Review
                         </button>
-                        <Link href={route('admin.testimonials')} style={{ padding: '10px 24px', borderRadius: '10px', border: '1px solid #d1d5db', backgroundColor: '#fff', color: '#374151', textDecoration: 'none', fontSize: '14px', fontWeight: 500 }}>
+                        <Link href={route('admin.google_reviews')} style={{ padding: '10px 24px', borderRadius: '10px', border: '1px solid #d1d5db', backgroundColor: '#fff', color: '#374151', textDecoration: 'none', fontSize: '14px', fontWeight: 500 }}>
                             Cancel
                         </Link>
                     </div>

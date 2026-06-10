@@ -3,23 +3,23 @@ import { Head, Link, router } from '@inertiajs/react';
 
 export default function TestimonialsIndex({ testimonials }) {
     const deleteTestimonial = (testimonial) => {
-        if (confirm(`Are you sure you want to delete the testimonial from "${testimonial.name}"?`)) {
-            router.delete(route('admin.testimonials.destroy', testimonial.id));
+        if (confirm(`Are you sure you want to delete the Google review from "${testimonial.name}"?`)) {
+            router.delete(route('admin.google_reviews.destroy', testimonial.id));
         }
     };
 
     return (
         <AdminLayout>
-            <Head title="Manage Testimonials" />
+            <Head title="Manage Google Reviews" />
 
             <div style={{ marginBottom: '24px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                 <div>
-                    <h1 style={{ margin: 0, fontSize: '22px', fontWeight: 700, color: '#111827' }}>Testimonials</h1>
+                    <h1 style={{ margin: 0, fontSize: '22px', fontWeight: 700, color: '#111827' }}>Google Reviews</h1>
                     <p style={{ margin: '4px 0 0', fontSize: '14px', color: '#6b7280' }}>Manage dynamic homepage Google reviews / client testimonials</p>
                 </div>
-                <Link href={route('admin.testimonials.create')} style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', padding: '10px 20px', borderRadius: '10px', backgroundColor: '#008ed2', color: '#fff', textDecoration: 'none', fontSize: '13px', fontWeight: 600 }}>
+                <Link href={route('admin.google_reviews.create')} style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', padding: '10px 20px', borderRadius: '10px', backgroundColor: '#008ed2', color: '#fff', textDecoration: 'none', fontSize: '13px', fontWeight: 600 }}>
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"><path d="M12 4.5v15m7.5-7.5h-15"/></svg>
-                    Add Testimonial
+                    Add Google Review
                 </Link>
             </div>
 
@@ -111,7 +111,7 @@ export default function TestimonialsIndex({ testimonials }) {
                                     <td style={{ padding: '14px 20px', textAlign: 'right' }}>
                                         <div style={{ display: 'flex', gap: '8px', justifyContent: 'flex-end' }}>
                                             <Link 
-                                                href={route('admin.testimonials.edit', t.id)} 
+                                                href={route('admin.google_reviews.edit', t.id)} 
                                                 style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: '32px', height: '32px', borderRadius: '6px', backgroundColor: '#eef9ff', color: '#008ed2', textDecoration: 'none', transition: 'all 0.15s' }}
                                                 title="Edit"
                                             >

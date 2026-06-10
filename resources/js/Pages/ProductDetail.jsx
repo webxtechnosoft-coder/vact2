@@ -126,11 +126,23 @@ function HeroCarousel({ slides }) {
 /* ──────────────────────────────────────────────
    SPOTLIGHT CARD — shared by all layouts
 ────────────────────────────────────────────── */
-function SpotlightSection({ spotlight }) {
+function SpotlightSection({ spotlight, product }) {
     if (!spotlight) return null;
-    const paragraphs = spotlight.paragraphs || 
-        ([spotlight.description1, spotlight.description2].filter(Boolean)) || 
-        [];
+
+    const title = product?.title || spotlight.title || '';
+    const subtitle = product?.category || spotlight.subtitle || '';
+    const descriptionText = product?.description || '';
+    const paragraphs = descriptionText ? [descriptionText] : (spotlight.paragraphs || ([spotlight.description1, spotlight.description2].filter(Boolean)) || []);
+
+    const imageUrl = (() => {
+        const img = product?.image || spotlight.image;
+        if (!img) return "/assets/images/product/product13.png";
+        if (img.startsWith('assets/') || img.startsWith('http') || img.startsWith('/')) {
+            if (img.startsWith('assets/')) return '/' + img;
+            return img;
+        }
+        return `/storage/${img}`;
+    })();
 
     return (
         <section className="product-details" style={{ paddingTop: '40px', paddingBottom: '60px' }}>
@@ -144,8 +156,8 @@ function SpotlightSection({ spotlight }) {
                                          dangerouslySetInnerHTML={{ __html: spotlight.badge }}>
                                     </div>
                                 )}
-                                <h3 className="product-details__title" style={{ fontSize: '36px', fontWeight: '800', color: '#1e293b', lineHeight: '1.2', marginBottom: '15px' }}>{spotlight.title}</h3>
-                                {spotlight.subtitle && <p style={{ fontWeight: '700', color: 'var(--eduvers-base)', fontSize: '18px', marginBottom: '20px' }}>{spotlight.subtitle}</p>}
+                                <h3 className="product-details__title" style={{ fontSize: '36px', fontWeight: '800', color: '#1e293b', lineHeight: '1.2', marginBottom: '15px' }}>{title}</h3>
+                                {subtitle && <p style={{ fontWeight: '700', color: 'var(--eduvers-base)', fontSize: '18px', marginBottom: '20px' }}>{subtitle}</p>}
                                 {spotlight.highlight && (
                                     <p className="product-details__content-text1" style={{ background: 'rgba(0, 142, 210, 0.02)', borderLeft: '4px solid var(--eduvers-base)', padding: '15px 20px', borderRadius: '4px 12px 12px 4px', fontSize: '15px', fontWeight: '600', color: '#475569', lineHeight: '1.6', marginBottom: '20px' }}>
                                         {spotlight.highlight}
@@ -168,7 +180,7 @@ function SpotlightSection({ spotlight }) {
                         <div className="col-lg-5">
                             <div className="spotlight-image-container">
                                 <div className="spotlight-image-glow"></div>
-                                <img src={spotlight.image} className="spotlight-img img-fluid" alt={spotlight.title} />
+                                <img src={imageUrl} className="spotlight-img img-fluid" alt={title} />
                             </div>
                         </div>
                     </div>
@@ -177,6 +189,7 @@ function SpotlightSection({ spotlight }) {
         </section>
     );
 }
+
 
 /* ──────────────────────────────────────────────
    MACHINE LAYOUT — Overview + Specs Cards
@@ -997,13 +1010,9 @@ export default function ProductDetail({ product }) {
                 }
             `}</style>
 
-            {/* Hero Carousel */}
-            {(content.carousel || content.hero_carousel) && (
-                <HeroCarousel slides={content.carousel || content.hero_carousel} />
-            )}
 
             {/* Spotlight / Product Details Card */}
-            {content.spotlight && <SpotlightSection spotlight={content.spotlight} />}
+            {content.spotlight && <SpotlightSection spotlight={content.spotlight} product={product} />}
 
             {/* Dynamic Layout Body */}
             {isMachineLayout && <MachineLayout content={content} />}

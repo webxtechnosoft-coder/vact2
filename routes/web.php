@@ -205,13 +205,7 @@ Route::middleware('auth')->group(function () {
         Route::put('/partners/{partner}', [App\Http\Controllers\AdminController::class, 'updatePartner'])->name('admin.partners.update');
         Route::delete('/partners/{partner}', [App\Http\Controllers\AdminController::class, 'destroyPartner'])->name('admin.partners.destroy');
 
-        // Blogs CRUD
-        Route::get('/blogs', [App\Http\Controllers\AdminController::class, 'blogs'])->name('admin.blogs');
-        Route::get('/blogs/create', [App\Http\Controllers\AdminController::class, 'createBlog'])->name('admin.blogs.create');
-        Route::post('/blogs', [App\Http\Controllers\AdminController::class, 'storeBlog'])->name('admin.blogs.store');
-        Route::get('/blogs/{blog}/edit', [App\Http\Controllers\AdminController::class, 'editBlog'])->name('admin.blogs.edit');
-        Route::put('/blogs/{blog}', [App\Http\Controllers\AdminController::class, 'updateBlog'])->name('admin.blogs.update');
-        Route::delete('/blogs/{blog}', [App\Http\Controllers\AdminController::class, 'destroyBlog'])->name('admin.blogs.destroy');
+
 
         // FAQs CRUD
         Route::get('/faqs', [App\Http\Controllers\AdminController::class, 'faqs'])->name('admin.faqs');
@@ -221,13 +215,13 @@ Route::middleware('auth')->group(function () {
         Route::put('/faqs/{faq}', [App\Http\Controllers\AdminController::class, 'updateFaq'])->name('admin.faqs.update');
         Route::delete('/faqs/{faq}', [App\Http\Controllers\AdminController::class, 'destroyFaq'])->name('admin.faqs.destroy');
 
-        // Testimonials CRUD
-        Route::get('/testimonials', [App\Http\Controllers\AdminController::class, 'testimonials'])->name('admin.testimonials');
-        Route::get('/testimonials/create', [App\Http\Controllers\AdminController::class, 'createTestimonial'])->name('admin.testimonials.create');
-        Route::post('/testimonials', [App\Http\Controllers\AdminController::class, 'storeTestimonial'])->name('admin.testimonials.store');
-        Route::get('/testimonials/{testimonial}/edit', [App\Http\Controllers\AdminController::class, 'editTestimonial'])->name('admin.testimonials.edit');
-        Route::put('/testimonials/{testimonial}', [App\Http\Controllers\AdminController::class, 'updateTestimonial'])->name('admin.testimonials.update');
-        Route::delete('/testimonials/{testimonial}', [App\Http\Controllers\AdminController::class, 'destroyTestimonial'])->name('admin.testimonials.destroy');
+        // Google Reviews CRUD
+        Route::get('/google-reviews', [App\Http\Controllers\AdminController::class, 'googleReviews'])->name('admin.google_reviews');
+        Route::get('/google-reviews/create', [App\Http\Controllers\AdminController::class, 'createGoogleReview'])->name('admin.google_reviews.create');
+        Route::post('/google-reviews', [App\Http\Controllers\AdminController::class, 'storeGoogleReview'])->name('admin.google_reviews.store');
+        Route::get('/google-reviews/{google_review}/edit', [App\Http\Controllers\AdminController::class, 'editGoogleReview'])->name('admin.google_reviews.edit');
+        Route::put('/google-reviews/{google_review}', [App\Http\Controllers\AdminController::class, 'updateGoogleReview'])->name('admin.google_reviews.update');
+        Route::delete('/google-reviews/{google_review}', [App\Http\Controllers\AdminController::class, 'destroyGoogleReview'])->name('admin.google_reviews.destroy');
     });
 });
 

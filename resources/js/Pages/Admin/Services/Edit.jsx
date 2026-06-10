@@ -1,5 +1,5 @@
 import AdminLayout from '@/Layouts/AdminLayout';
-import { Head, useForm, usePage } from '@inertiajs/react';
+import { Head, Link, useForm, usePage, router } from '@inertiajs/react';
 import { useState, useEffect } from 'react';
 
 const LABELS = {
@@ -11,7 +11,7 @@ const LABELS = {
     'human-resource': 'Human Resources',
 };
 
-export default function ServiceEdit({ service }) {
+function ServiceEdit({ service }) {
     const { props } = usePage();
     const flash = props.flash || {};
     const [showFlash, setShowFlash] = useState(!!flash.success);
@@ -939,9 +939,7 @@ export default function ServiceEdit({ service }) {
         </AdminLayout>
     );
 }
-import { Head, Link, useForm } from '@inertiajs/react';
-
-export default function ServicesEdit({ service }) {
+function ServicesEdit({ service }) {
     const { data, setData, post, processing, errors } = useForm({
         title: service.title || '',
         description: service.description || '',
@@ -1043,4 +1041,19 @@ export default function ServicesEdit({ service }) {
     );
 }
 
-import { router } from '@inertiajs/react';
+export default function EditServiceWrapper({ service }) {
+    const DYNAMIC_SLUGS = [
+        'industrial-automation',
+        'embedded-systems',
+        'embedded-offshore-outsourcing',
+        'fuel-monitoring-system',
+        'civil-pmc',
+        'human-resource'
+    ];
+
+    if (DYNAMIC_SLUGS.includes(service?.slug)) {
+        return <ServiceEdit service={service} />;
+    }
+
+    return <ServicesEdit service={service} />;
+}

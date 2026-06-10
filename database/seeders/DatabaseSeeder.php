@@ -27,6 +27,11 @@ class DatabaseSeeder extends Seeder
         $this->call(TestimonialSeeder::class);
         $this->call(CareerSeeder::class);
         $this->call(ServicesSeeder::class);
+        $this->call(ProductSeeder::class);
+        $this->call(PlacementSeeder::class);
+        $this->call(PartnerSeeder::class);
+        $this->call(FaqSeeder::class);
+        $this->call(GoogleReviewSeeder::class);
 
         if (Slider::count() === 0) {
         Slider::insert([
@@ -64,10 +69,6 @@ class DatabaseSeeder extends Seeder
                 'is_active' => true,
             ],
         ]);
-        }
-
-        if (\App\Models\Product::count() === 0) {
-            $this->call(HomeContentSeeder::class);
         }
     }
 }
