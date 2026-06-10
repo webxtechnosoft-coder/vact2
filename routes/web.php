@@ -9,10 +9,26 @@ use Inertia\Inertia;
 Route::get('/', function () {
     $sliders = Slider::where('is_active', true)->orderBy('sort_order')->get();
     $contents = CompanyContent::where('is_active', true)->orderBy('sort_order')->get()->keyBy('section_key');
+    $products = \App\Models\Product::where('is_active', true)->orderBy('sort_order')->get();
+    $services = \App\Models\Service::where('is_active', true)->orderBy('sort_order')->get();
+    $placements = \App\Models\Placement::where('is_active', true)->orderBy('sort_order')->get();
+    $partners = \App\Models\Partner::whereIn('type', ['partner', 'both'])->where('is_active', true)->orderBy('sort_order')->get();
+    $clients = \App\Models\Partner::whereIn('type', ['client', 'both'])->where('is_active', true)->orderBy('sort_order')->get();
+    $blogs = \App\Models\Blog::where('is_active', true)->orderBy('published_at', 'desc')->take(3)->get();
+    $faqs = \App\Models\Faq::where('is_active', true)->orderBy('sort_order')->get();
+    $testimonials = \App\Models\GoogleReview::where('is_active', true)->orderBy('sort_order')->get();
 
     return Inertia::render('Index', [
         'sliders' => $sliders,
         'contents' => $contents,
+        'products' => $products,
+        'services' => $services,
+        'placements' => $placements,
+        'partners' => $partners,
+        'clients' => $clients,
+        'blogs' => $blogs,
+        'faqs' => $faqs,
+        'testimonials' => $testimonials,
     ]);
 });
 
@@ -80,15 +96,6 @@ Route::get('/human-resource', function () {
 });
 Route::get('/talent-based-outsourcing', fn() => Inertia::render('TalentBasedOutsourcing'));
 
-Route::get('/vact-autoedge-development-board', fn() => Inertia::render('VactAutoedgeDevelopmentBoard'));
-Route::get('/vact-embcore-development-board', fn() => Inertia::render('VactEmbcoreDevelopmentBoard'));
-Route::get('/automatic-milk-vending-machine', fn() => Inertia::render('AutomaticMilkVendingMachine'));
-Route::get('/automatic-oil-vending-machine', fn() => Inertia::render('AutomaticOilVendingMachine'));
-Route::get('/automatic-oil-pouch-packing-machine', fn() => Inertia::render('AutomaticOilPouchPackingMachine'));
-Route::get('/cold-drink-vending-machine', fn() => Inertia::render('ColdDrinkVendingMachine'));
-Route::get('/automatic-milk-bag-packing-machine', fn() => Inertia::render('AutomaticMilkBagPackingMachine'));
-Route::get('/automatic-coffee-vending-machine', fn() => Inertia::render('AutomaticCoffeeVendingMachine'));
-Route::get('/open-top-chambers', fn() => Inertia::render('OpenTopChambers'));
 
 Route::get('/qnx-rtos-training', fn() => Inertia::render('QnxRtosTraining'));
 Route::get('/freertos-training', fn() => Inertia::render('FreertosTraining'));
@@ -129,6 +136,8 @@ Route::middleware('auth')->group(function () {
 
         Route::get('/company', [App\Http\Controllers\AdminController::class, 'companyContents'])->name('admin.company');
         Route::match(['put', 'post'], '/company', [App\Http\Controllers\AdminController::class, 'updateCompanyContent'])->name('admin.company.update');
+        Route::get('/company/{section}', [App\Http\Controllers\AdminController::class, 'editCompanySection'])->name('admin.company.section.edit');
+        Route::put('/company/{section}', [App\Http\Controllers\AdminController::class, 'updateCompanySection'])->name('admin.company.section.update');
 
         Route::get('/about', [App\Http\Controllers\AdminController::class, 'about'])->name('admin.about');
         Route::match(['put', 'post'], '/about', [App\Http\Controllers\AdminController::class, 'updateAbout'])->name('admin.about.update');
@@ -164,8 +173,65 @@ Route::middleware('auth')->group(function () {
 
         Route::get('/services/{slug}', [App\Http\Controllers\AdminController::class, 'editService'])->name('admin.services.edit');
         Route::match(['put', 'post'], '/services/{slug}', [App\Http\Controllers\AdminController::class, 'updateService'])->name('admin.services.update');
+        // Products CRUD
+        Route::get('/products', [App\Http\Controllers\AdminController::class, 'products'])->name('admin.products');
+        Route::get('/products/create', [App\Http\Controllers\AdminController::class, 'createProduct'])->name('admin.products.create');
+        Route::post('/products', [App\Http\Controllers\AdminController::class, 'storeProduct'])->name('admin.products.store');
+        Route::get('/products/{product}/edit', [App\Http\Controllers\AdminController::class, 'editProduct'])->name('admin.products.edit');
+        Route::put('/products/{product}', [App\Http\Controllers\AdminController::class, 'updateProduct'])->name('admin.products.update');
+        Route::delete('/products/{product}', [App\Http\Controllers\AdminController::class, 'destroyProduct'])->name('admin.products.destroy');
 
+        // Services CRUD
+        Route::get('/services', [App\Http\Controllers\AdminController::class, 'services'])->name('admin.services');
+        Route::get('/services/create', [App\Http\Controllers\AdminController::class, 'createService'])->name('admin.services.create');
+        Route::post('/services', [App\Http\Controllers\AdminController::class, 'storeService'])->name('admin.services.store');
+        Route::get('/services/{service}/edit', [App\Http\Controllers\AdminController::class, 'editService'])->name('admin.services.edit');
+        Route::put('/services/{service}', [App\Http\Controllers\AdminController::class, 'updateService'])->name('admin.services.update');
+        Route::delete('/services/{service}', [App\Http\Controllers\AdminController::class, 'destroyService'])->name('admin.services.destroy');
+
+        // Placements CRUD
+        Route::get('/placements', [App\Http\Controllers\AdminController::class, 'placements'])->name('admin.placements');
+        Route::get('/placements/create', [App\Http\Controllers\AdminController::class, 'createPlacement'])->name('admin.placements.create');
+        Route::post('/placements', [App\Http\Controllers\AdminController::class, 'storePlacement'])->name('admin.placements.store');
+        Route::get('/placements/{placement}/edit', [App\Http\Controllers\AdminController::class, 'editPlacement'])->name('admin.placements.edit');
+        Route::put('/placements/{placement}', [App\Http\Controllers\AdminController::class, 'updatePlacement'])->name('admin.placements.update');
+        Route::delete('/placements/{placement}', [App\Http\Controllers\AdminController::class, 'destroyPlacement'])->name('admin.placements.destroy');
+
+        // Partners CRUD
+        Route::get('/partners', [App\Http\Controllers\AdminController::class, 'partners'])->name('admin.partners');
+        Route::get('/partners/create', [App\Http\Controllers\AdminController::class, 'createPartner'])->name('admin.partners.create');
+        Route::post('/partners', [App\Http\Controllers\AdminController::class, 'storePartner'])->name('admin.partners.store');
+        Route::get('/partners/{partner}/edit', [App\Http\Controllers\AdminController::class, 'editPartner'])->name('admin.partners.edit');
+        Route::put('/partners/{partner}', [App\Http\Controllers\AdminController::class, 'updatePartner'])->name('admin.partners.update');
+        Route::delete('/partners/{partner}', [App\Http\Controllers\AdminController::class, 'destroyPartner'])->name('admin.partners.destroy');
+
+        // Blogs CRUD
+        Route::get('/blogs', [App\Http\Controllers\AdminController::class, 'blogs'])->name('admin.blogs');
+        Route::get('/blogs/create', [App\Http\Controllers\AdminController::class, 'createBlog'])->name('admin.blogs.create');
+        Route::post('/blogs', [App\Http\Controllers\AdminController::class, 'storeBlog'])->name('admin.blogs.store');
+        Route::get('/blogs/{blog}/edit', [App\Http\Controllers\AdminController::class, 'editBlog'])->name('admin.blogs.edit');
+        Route::put('/blogs/{blog}', [App\Http\Controllers\AdminController::class, 'updateBlog'])->name('admin.blogs.update');
+        Route::delete('/blogs/{blog}', [App\Http\Controllers\AdminController::class, 'destroyBlog'])->name('admin.blogs.destroy');
+
+        // FAQs CRUD
+        Route::get('/faqs', [App\Http\Controllers\AdminController::class, 'faqs'])->name('admin.faqs');
+        Route::get('/faqs/create', [App\Http\Controllers\AdminController::class, 'createFaq'])->name('admin.faqs.create');
+        Route::post('/faqs', [App\Http\Controllers\AdminController::class, 'storeFaq'])->name('admin.faqs.store');
+        Route::get('/faqs/{faq}/edit', [App\Http\Controllers\AdminController::class, 'editFaq'])->name('admin.faqs.edit');
+        Route::put('/faqs/{faq}', [App\Http\Controllers\AdminController::class, 'updateFaq'])->name('admin.faqs.update');
+        Route::delete('/faqs/{faq}', [App\Http\Controllers\AdminController::class, 'destroyFaq'])->name('admin.faqs.destroy');
+
+        // Testimonials CRUD
+        Route::get('/testimonials', [App\Http\Controllers\AdminController::class, 'testimonials'])->name('admin.testimonials');
+        Route::get('/testimonials/create', [App\Http\Controllers\AdminController::class, 'createTestimonial'])->name('admin.testimonials.create');
+        Route::post('/testimonials', [App\Http\Controllers\AdminController::class, 'storeTestimonial'])->name('admin.testimonials.store');
+        Route::get('/testimonials/{testimonial}/edit', [App\Http\Controllers\AdminController::class, 'editTestimonial'])->name('admin.testimonials.edit');
+        Route::put('/testimonials/{testimonial}', [App\Http\Controllers\AdminController::class, 'updateTestimonial'])->name('admin.testimonials.update');
+        Route::delete('/testimonials/{testimonial}', [App\Http\Controllers\AdminController::class, 'destroyTestimonial'])->name('admin.testimonials.destroy');
     });
 });
 
 require __DIR__.'/auth.php';
+
+Route::get('/{slug}', [App\Http\Controllers\ProductController::class, 'show'])->name('products.show');
+

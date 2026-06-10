@@ -30,6 +30,128 @@ export default function Blogs({ blogs, slides }) {
                                             <div class="testimonial-one__img">
                                                 <img src={imgUrl(slide.image)} alt="" style={{ width: '100%', borderRadius: '8px' }} />
                                             </div>
+                    {/*Item 3*/}
+                    <div class="item">
+                        <div class="row align-items-center">
+                            <div class="col-xl-5 col-lg-5 col-md-12">
+                                <div
+                                    style={{ "border": "1px solid rgba(0,142,210,0.5)", "borderRadius": "12px", "padding": "20px", "background": "rgba(0,0,0,0.2)" }}>
+                                    <div class="testimonial-one__img">
+                                        <img src="/assets/images/about/about1.png" alt=""
+                                            style={{ "width": "100%", "borderRadius": "8px" }} />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xl-6 col-lg-6 col-md-12">
+                                <div class="testimonial-one__single"
+                                    style={{ "background": "transparent !important", "boxShadow": "none !important", "paddingLeft": "30px" }}>
+                                    <div
+                                        style={{ "width": "60px", "height": "60px", "background": "#008ed2", "borderRadius": "50%", "display": "flex", "alignItems": "center", "justifyContent": "center", "marginBottom": "20px" }}>
+                                        <i class="fas fa-quote-left" style={{ "color": "#fff", "fontSize": "24px" }}></i>
+                                    </div>
+                                    <h2 style={{ "fontSize": "32px", "fontWeight": "700", "color": "#fff", "marginBottom": "15px" }}>Our
+                                        Products <br /><span style={{ "color": "#008ed2" }}>& Solutions</span></h2>
+                                    <p class="testimonial-one__text"
+                                        style={{ "fontSize": "15px", "lineHeight": "1.8", "color": "#a0aec0" }}><strong>Our
+                                            Products</strong> include advanced Vending Machine solutions for smart and
+                                        automated dispensing applications. We provide Automatic Milk, Oil, Cool Drink,
+                                        and Coffee Vending Machines with reliable and user-friendly operation. These
+                                        machines are designed for commercial, industrial, and retail environments. They
+                                        ensure efficient, hygienic, and high-performance dispensing technology.</p>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    {/*Item 4*/}
+                    <div class="item">
+                        <div class="row align-items-center">
+                            <div class="col-xl-5 col-lg-5 col-md-12">
+                                <div
+                                    style={{ "border": "1px solid rgba(0,142,210,0.5)", "borderRadius": "12px", "padding": "20px", "background": "rgba(0,0,0,0.2)" }}>
+                                    <div class="testimonial-one__img">
+                                        <img src="/assets/images/about/about4.png" alt=""
+                                            style={{ "width": "100%", "borderRadius": "8px" }} />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xl-6 col-lg-6 col-md-12">
+                                <div class="testimonial-one__single"
+                                    style={{ "background": "transparent !important", "boxShadow": "none !important", "paddingLeft": "30px" }}>
+                                    <div
+                                        style={{ "width": "60px", "height": "60px", "background": "#008ed2", "borderRadius": "50%", "display": "flex", "alignItems": "center", "justifyContent": "center", "marginBottom": "20px" }}>
+                                        <i class="fas fa-quote-left" style={{ "color": "#fff", "fontSize": "24px" }}></i>
+                                    </div>
+                                    <h2 style={{ "fontSize": "32px", "fontWeight": "700", "color": "#fff", "marginBottom": "15px" }}>
+                                        VAct Technologies <br /><span style={{ "color": "#008ed2" }}>Transforming Ideas</span>
+                                    </h2>
+                                    <p class="testimonial-one__text"
+                                        style={{ "fontSize": "15px", "lineHeight": "1.8", "color": "#a0aec0" }}>VAct Technologies
+                                        transforms innovative ideas into complete product solutions with advanced design
+                                        and development services. We deliver efficient solutions for industrial,
+                                        automation, and embedded applications using modern and reliable technology. From
+                                        concept to final product development, we ensure smart, innovative, and
+                                        high-quality solutions.</p>
+                                </div>
+                            </div>
+                            <div class="col-xl-1 col-lg-1 col-md-12 d-flex justify-content-center">
+
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </section>
+    {/*Testimonial One End*/}
+
+    {/* Blog One Start */}
+    <section class="blog-one">
+        <div class="container">
+            <div class="section-title text-center sec-title-animation animation-style1">
+                <div class="section-title__tagline-box">
+                    <div class="section-title__tagline-shape"></div>
+                    <div class="section-title__tagline-shape-2"></div>
+                    <span class="section-title__tagline">Latest Blog</span>
+                </div>
+                <h2 class="section-title__title title-animation">Insights & updates for<br /> modern
+                    <span>learners</span>
+                </h2>
+            </div>
+            <div class="row">
+                {/* Blog One Single Start */}
+                <div class="col-xl-4 col-lg-6  wow fadeInLeft" data-wow-delay="100ms">
+                    <div class="blog-one__single">
+                        <div class="blog-one__img">
+                            <img src="/assets/images/blogs/blog1.png" alt="" />
+                            <div class="blog-one__plus">
+                                <a href="/blogdetails"><i class="icon-plus"></i></a>
+                            </div>
+                            <div class="blog-one__tag">
+                                <a href="/blogdetails">VAct Blog</a>
+                            </div>
+                        </div>
+                        <div class="blog-one__content">
+                            <ul class="blog-one__meta list-unstyled">
+                                <li>
+                                    <a href="#">
+                                        <span class="fas fa-calendar-alt"></span>May 10, 2025
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="#">
+                                        <span class="fas fa-comments"></span>Comment
+                                    </a>
+                                </li>
+                            </ul>
+                            <h3 class="blog-one__title"><a href="#">IoT's Ascendance and Future Prospects in the Indian Embedded industry</a></h3>
+                            <div class="blog-one__author-and-btn">
+                                <div class="blog-one__author-info">
+                                    <div class="blog-one__author-img-box">
+                                        <div class="blog-one__author-img">
+                                            <img src="/assets/images/blog/blog-one-author-img-1.jpg" alt="" />
                                         </div>
                                     </div>
                                     <div class="col-xl-6 col-lg-6 col-md-12">

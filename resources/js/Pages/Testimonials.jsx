@@ -41,6 +41,14 @@ export default function Testimonials({ slides, testimonials }) {
                                             <h2 style={{ fontSize: '32px', fontWeight: 700, color: '#fff', marginBottom: '15px' }}>{slide.title}{slide.subtitle ? <><br /><span style={{ color: '#008ed2' }}>{slide.subtitle}</span></> : ''}</h2>
                                             <p class="testimonial-one__text" style={{ fontSize: '15px', lineHeight: 1.8, color: '#a0aec0' }}>{slide.description}</p>
                                         </div>
+                                </div>
+                            </div>
+                            <div class="col-xl-6 col-lg-6 col-md-12">
+                                <div class="testimonial-one__single"
+                                    style={{ "background": "transparent !important", "boxShadow": "none !important", "paddingLeft": "30px" }}>
+                                    <div
+                                        style={{ "width": "60px", "height": "60px", "background": "#008ed2", "borderRadius": "50%", "display": "flex", "alignItems": "center", "justifyContent": "center", "marginBottom": "20px" }}>
+                                        <i class="fas fa-quote-left" style={{ "color": "#fff", "fontSize": "24px" }}></i>
                                     </div>
                                 </div>
                             </div>
