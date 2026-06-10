@@ -58,9 +58,5 @@ class DatabaseSeeder extends Seeder
             ],
         ]);
         }
-
-        if (\App\Models\Product::count() === 0) {
-            $this->call(HomeContentSeeder::class);
-        }
     }
 }

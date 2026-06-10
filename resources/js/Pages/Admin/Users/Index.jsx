@@ -23,54 +23,6 @@ export default function UsersIndex({ users }) {
                 </Link>
             </div>
 
-            <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: '14px' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                    <span style={{ fontSize: '13px', color: '#4b5563', fontWeight: 500 }}>Show</span>
-                    <select 
-                        className="ignore"
-                        value={users.per_page || 10} 
-                        onChange={(e) => {
-                            const query = new URLSearchParams(window.location.search);
-                            query.set('per_page', e.target.value);
-                            query.set('page', '1');
-                            router.get(`${window.location.pathname}?${query.toString()}`, {}, { preserveState: true });
-                        }}
-                        style={{ 
-                            padding: '6px 32px 6px 12px', 
-                            border: '1px solid #d1d5db', 
-                            borderRadius: '8px', 
-                            fontSize: '13px', 
-                            fontWeight: 500,
-                            color: '#374151', 
-                            backgroundColor: '#fff', 
-                            cursor: 'pointer', 
-                            outline: 'none',
-                            appearance: 'none',
-                            WebkitAppearance: 'none',
-                            backgroundImage: `url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjNGI1NTYzIiBzdHJva2Utd2lkdGg9IjIuNSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIj48cG9seWxpbmUgcG9pbnRzPSI2IDkgMTIgMTUgMTggOSI+PC9wb2x5bGluZT48L3N2Zz4=")`,
-                            backgroundRepeat: 'no-repeat',
-                            backgroundPosition: 'right 10px center',
-                            backgroundSize: '12px',
-                            boxShadow: '0 1px 2px rgba(0, 0, 0, 0.05)',
-                            transition: 'all 0.15s ease-in-out',
-                        }}
-                        onFocus={(e) => {
-                            e.target.style.borderColor = '#008ed2';
-                            e.target.style.boxShadow = '0 0 0 3px rgba(0, 142, 210, 0.15)';
-                        }}
-                        onBlur={(e) => {
-                            e.target.style.borderColor = '#d1d5db';
-                            e.target.style.boxShadow = '0 1px 2px rgba(0, 0, 0, 0.05)';
-                        }}
-                    >
-                        <option value="10">10</option>
-                        <option value="25">25</option>
-                        <option value="50">50</option>
-                    </select>
-                    <span style={{ fontSize: '13px', color: '#4b5563', fontWeight: 500 }}>entries</span>
-                </div>
-            </div>
-
             <div style={{ backgroundColor: '#fff', borderRadius: '12px', border: '1px solid #e5e7eb', boxShadow: '0 1px 3px rgba(0,0,0,0.04)', overflow: 'hidden' }}>
                 <div style={{ overflowX: 'auto' }}>
                     <table style={{ width: '100%', borderCollapse: 'collapse' }}>
