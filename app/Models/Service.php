@@ -6,6 +6,15 @@ use Illuminate\Database\Eloquent\Model;
 
 class Service extends Model
 {
+    protected $fillable = [
+        'slug', 'title', 'subtitle', 'description', 'badge',
+        'image', 'features', 'slides', 'page_data', 'is_active', 'sort_order',
+    ];
+
+    protected $casts = [
+        'features' => 'array',
+        'slides' => 'array',
+        'page_data' => 'array',
     protected $table = 'services';
 
     protected $fillable = [

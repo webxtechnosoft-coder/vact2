@@ -2,8 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Blog;
+use App\Models\Career;
+use App\Models\JobApplication;
 use App\Models\CompanyContent;
+use App\Models\ContactMessage;
+use App\Models\Gallery;
+use App\Models\Service;
 use App\Models\Slider;
+use App\Models\Testimonial;
 use App\Models\User;
 use App\Models\Product;
 use App\Models\Service;
@@ -224,6 +231,186 @@ class AdminController extends Controller
         return redirect()->route('admin.sliders')->with('success', 'Slider deleted successfully.');
     }
 
+    public function about()
+    {
+        $keys = ['about-content', 'vision', 'quality', 'mission', 'director', 'about-slide-1', 'about-slide-2', 'about-slide-3', 'about-slide-4'];
+        $contents = CompanyContent::whereIn('section_key', $keys)->orderBy('sort_order')->get();
+
+        return Inertia::render('Admin/About/Edit', [
+            'contents' => $contents,
+        ]);
+    }
+
+    public function updateAbout(Request $request)
+    {
+        $request->validate([
+            'sections' => 'required|array',
+            'sections.*.id' => 'nullable|exists:company_contents,id',
+            'sections.*.section_key' => 'required|string|max:255',
+            'sections.*.title' => 'nullable|string|max:500',
+            'sections.*.subtitle' => 'nullable|string|max:500',
+            'sections.*.description' => 'nullable|string',
+            'sections.*.stat_years' => 'nullable|integer',
+            'sections.*.stat_years_suffix' => 'nullable|string|max:10',
+            'sections.*.stat_years_label' => 'nullable|string|max:255',
+            'sections.*.points_1' => 'nullable|string|max:500',
+            'sections.*.points_2' => 'nullable|string|max:500',
+            'sections.*.points_3' => 'nullable|string|max:500',
+            'sections.*.points_4' => 'nullable|string|max:500',
+            'sections.*.brochure_link' => 'nullable|string|max:500',
+            'sections.*.linkedin_url' => 'nullable|string|max:500',
+        ]);
+
+        $files = $request->file('sections', []);
+
+        foreach ($request->sections as $index => $section) {
+            $content = $section['id'] ? CompanyContent::find($section['id']) : CompanyContent::where('section_key', $section['section_key'])->first();
+            if (!$content) {
+                $content = CompanyContent::create(['section_key' => $section['section_key'], 'label' => ucfirst(str_replace('-', ' ', $section['section_key'])), 'sort_order' => 0, 'is_active' => true]);
+            }
+
+            $data = [
+                'title' => $section['title'] ?? null,
+                'subtitle' => $section['subtitle'] ?? null,
+                'description' => $section['description'] ?? null,
+            ];
+
+            if (!empty($files[$index]['image'])) {
+                if ($content->image) {
+                    Storage::disk('public')->delete($content->image);
+                }
+                $data['image'] = $files[$index]['image']->store('company', 'public');
+            }
+
+            if (!empty($files[$index]['image2'])) {
+                if ($content->image2) {
+                    Storage::disk('public')->delete($content->image2);
+                }
+                $data['image2'] = $files[$index]['image2']->store('company', 'public');
+            }
+
+            if ($content->section_key === 'about-content') {
+                $settings = array_merge($content->settings ?? [], [
+                    'stat_years' => (int) ($section['stat_years'] ?? 15),
+                    'stat_years_suffix' => $section['stat_years_suffix'] ?? '+',
+                    'stat_years_label' => $section['stat_years_label'] ?? 'Years Of Experience',
+                ]);
+                $data['settings'] = $settings;
+            }
+
+            if ($content->section_key === 'director') {
+                $settings = array_merge($content->settings ?? [], [
+                    'points' => [
+                        $section['points_1'] ?? '24+ Years Experience',
+                        $section['points_2'] ?? 'Expert in Product Development',
+                        $section['points_3'] ?? 'Agile Project Management',
+                        $section['points_4'] ?? 'Leadership & Team Building',
+                    ],
+                    'brochure_link' => $section['brochure_link'] ?? 'https://www.vact-tech.com/wp-content/uploads/2021/06/Vact-brochure-High.pdf',
+                    'linkedin_url' => $section['linkedin_url'] ?? 'https://www.linkedin.com/in/kumaravelpandurangan/',
+                ]);
+                $data['settings'] = $settings;
+            }
+
+            $content->update($data);
+        }
+
+        return redirect()->back()->with('success', 'About page content updated successfully.');
+    }
+
+    public function editService($slug)
+    {
+        $service = Service::where('slug', $slug)->firstOrFail();
+        return Inertia::render('Admin/Services/Edit', [
+            'service' => $service,
+        ]);
+    }
+
+    public function updateService(Request $request, $slug)
+    {
+        $service = Service::where('slug', $slug)->firstOrFail();
+
+        $request->validate([
+            'title' => 'nullable|string|max:500',
+            'subtitle' => 'nullable|string',
+            'description' => 'nullable|string',
+            'badge' => 'nullable|string|max:255',
+            'features' => 'nullable|array',
+            'features.*.title' => 'required|string|max:255',
+            'features.*.description' => 'required|string',
+            'features.*.icon' => 'required|string|max:100',
+            'slides' => 'nullable|array',
+            'slides.*.heading' => 'nullable|string|max:500',
+            'slides.*.highlight' => 'nullable|string|max:500',
+            'slides.*.description' => 'nullable|string',
+            'page_data' => 'nullable|array',
+        ]);
+
+        $data = [];
+        foreach (['title', 'subtitle', 'description', 'badge', 'features'] as $field) {
+            if ($request->exists($field)) {
+                $data[$field] = $request->input($field);
+            }
+        }
+
+        $slides = $request->input('slides', []);
+        $oldSlides = $service->slides ?? [];
+        $oldImages = array_filter(array_column($oldSlides, 'image'));
+        foreach ($slides as $i => &$slide) {
+            $file = $request->file("slides.$i.image");
+            if ($file) {
+                $oldImage = $oldSlides[$i]['image'] ?? null;
+                if ($oldImage && Storage::disk('public')->exists($oldImage)) {
+                    Storage::disk('public')->delete($oldImage);
+                }
+                $slide['image'] = $file->store('services/slides', 'public');
+            } elseif (!isset($slide['image']) || empty($slide['image'])) {
+                $slide['image'] = $oldSlides[$i]['image'] ?? '';
+            }
+        }
+        $newImages = array_filter(array_column($slides, 'image'));
+        foreach ($oldImages as $oldImg) {
+            if (!in_array($oldImg, $newImages) && Storage::disk('public')->exists($oldImg)) {
+                Storage::disk('public')->delete($oldImg);
+            }
+        }
+        $data['slides'] = $slides;
+
+        if ($request->exists('image') && $request->hasFile('image')) {
+            if ($service->image) {
+                Storage::disk('public')->delete($service->image);
+            }
+            $data['image'] = $request->file('image')->store('services', 'public');
+        }
+
+        // handle page_data with image uploads
+        $pageData = $request->input('page_data', []);
+        $oldPageData = $service->page_data ?? [];
+        if (!empty($pageData) && $service->slug === 'embedded-systems') {
+            foreach (['vehicle_networking', 'hmi', 'last_mile'] as $section) {
+                if (isset($pageData[$section]['image']) && is_string($pageData[$section]['image']) && str_starts_with($pageData[$section]['image'], 'tmp/')) {
+                    $pageData[$section]['image'] = '';
+                }
+                $fileKey = "page_data.{$section}.image";
+                $file = $request->file($fileKey);
+                if ($file) {
+                    $oldImg = $oldPageData[$section]['image'] ?? null;
+                    if ($oldImg && Storage::disk('public')->exists($oldImg)) {
+                        Storage::disk('public')->delete($oldImg);
+                    }
+                    $pageData[$section]['image'] = $file->store('services/page_data', 'public');
+                } elseif (empty($pageData[$section]['image']) && isset($oldPageData[$section]['image'])) {
+                    $pageData[$section]['image'] = $oldPageData[$section]['image'];
+                }
+            }
+        }
+        $data['page_data'] = $pageData;
+
+        $service->update($data);
+
+        return redirect()->back()->with('success', 'Service content updated successfully.');
+    }
+
     public function companyContents()
     {
         $contents = CompanyContent::orderBy('sort_order')->get();
@@ -292,6 +479,336 @@ class AdminController extends Controller
         return redirect()->route('admin.company')->with('success', 'Company content updated successfully.');
     }
 
+    public function galleries()
+    {
+        $galleries = Gallery::orderBy('sort_order')->get();
+        return Inertia::render('Admin/Gallery/Index', ['galleries' => $galleries]);
+    }
+
+    public function storeGallery(Request $request)
+    {
+        $request->validate([
+            'title' => 'nullable|string|max:500',
+            'image' => 'required|image|max:5120',
+            'sort_order' => 'nullable|integer',
+            'is_active' => 'nullable|boolean',
+        ]);
+
+        $data = [
+            'title' => $request->title,
+            'sort_order' => $request->sort_order ?? 0,
+            'is_active' => $request->boolean('is_active'),
+        ];
+
+        $data['image'] = $request->file('image')->store('galleries', 'public');
+
+        Gallery::create($data);
+
+        return redirect()->route('admin.galleries')->with('success', 'Gallery image added.');
+    }
+
+    public function updateGallery(Request $request, Gallery $gallery)
+    {
+        $request->validate([
+            'title' => 'nullable|string|max:500',
+            'image' => 'nullable|image|max:5120',
+            'sort_order' => 'nullable|integer',
+            'is_active' => 'nullable|boolean',
+        ]);
+
+        $data = [
+            'title' => $request->title,
+            'sort_order' => $request->sort_order ?? 0,
+            'is_active' => $request->boolean('is_active'),
+        ];
+
+        if ($request->hasFile('image')) {
+            if ($gallery->image) {
+                Storage::disk('public')->delete($gallery->image);
+            }
+            $data['image'] = $request->file('image')->store('galleries', 'public');
+        }
+
+        $gallery->update($data);
+
+        return redirect()->route('admin.galleries')->with('success', 'Gallery image updated.');
+    }
+
+    public function destroyGallery(Gallery $gallery)
+    {
+        if ($gallery->image) {
+            Storage::disk('public')->delete($gallery->image);
+        }
+        $gallery->delete();
+        return redirect()->route('admin.galleries')->with('success', 'Gallery image deleted.');
+    }
+
+    public function blogs()
+    {
+        $blogs = Blog::orderBy('sort_order')->get();
+        $slides = CompanyContent::whereIn('section_key', ['about-slide-1', 'about-slide-2', 'about-slide-3', 'about-slide-4'])->orderBy('sort_order')->get();
+        return Inertia::render('Admin/Blog/Index', ['blogs' => $blogs, 'slides' => $slides]);
+    }
+
+    public function storeBlog(Request $request)
+    {
+        $request->validate([
+            'title' => 'required|string|max:500',
+            'image' => 'nullable|image|max:5120',
+            'author_name' => 'nullable|string|max:255',
+            'author_image' => 'nullable|image|max:5120',
+            'card_date' => 'nullable|string|max:255',
+            'author_date' => 'nullable|string|max:255',
+            'short_description' => 'nullable|string',
+            'sort_order' => 'nullable|integer',
+            'is_active' => 'nullable|boolean',
+        ]);
+
+        $data = $request->only(['title', 'author_name', 'card_date', 'author_date', 'short_description', 'sort_order', 'is_active']);
+        $data['sort_order'] = $request->sort_order ?? 0;
+        $data['is_active'] = $request->boolean('is_active');
+
+        if ($request->hasFile('image')) {
+            $data['image'] = $request->file('image')->store('blogs', 'public');
+        }
+
+        if ($request->hasFile('author_image')) {
+            $data['author_image'] = $request->file('author_image')->store('blogs/authors', 'public');
+        }
+
+        Blog::create($data);
+
+        return redirect()->route('admin.blogs')->with('success', 'Blog created successfully.');
+    }
+
+    public function updateBlog(Request $request, Blog $blog)
+    {
+        $request->validate([
+            'title' => 'required|string|max:500',
+            'image' => 'nullable|image|max:5120',
+            'author_name' => 'nullable|string|max:255',
+            'author_image' => 'nullable|image|max:5120',
+            'card_date' => 'nullable|string|max:255',
+            'author_date' => 'nullable|string|max:255',
+            'short_description' => 'nullable|string',
+            'sort_order' => 'nullable|integer',
+            'is_active' => 'nullable|boolean',
+        ]);
+
+        $data = $request->only(['title', 'author_name', 'card_date', 'author_date', 'short_description', 'sort_order', 'is_active']);
+        $data['sort_order'] = $request->sort_order ?? 0;
+        $data['is_active'] = $request->boolean('is_active');
+
+        if ($request->hasFile('image')) {
+            if ($blog->image) {
+                Storage::disk('public')->delete($blog->image);
+            }
+            $data['image'] = $request->file('image')->store('blogs', 'public');
+        }
+
+        if ($request->hasFile('author_image')) {
+            if ($blog->author_image) {
+                Storage::disk('public')->delete($blog->author_image);
+            }
+            $data['author_image'] = $request->file('author_image')->store('blogs/authors', 'public');
+        }
+
+        $blog->update($data);
+
+        return redirect()->route('admin.blogs')->with('success', 'Blog updated successfully.');
+    }
+
+    public function destroyBlog(Blog $blog)
+    {
+        if ($blog->image) {
+            Storage::disk('public')->delete($blog->image);
+        }
+        if ($blog->author_image) {
+            Storage::disk('public')->delete($blog->author_image);
+        }
+        $blog->delete();
+        return redirect()->route('admin.blogs')->with('success', 'Blog deleted successfully.');
+    }
+
+    public function testimonials()
+    {
+        $testimonials = Testimonial::orderBy('sort_order')->get();
+        $slides = CompanyContent::whereIn('section_key', ['about-slide-1', 'about-slide-2', 'about-slide-3', 'about-slide-4'])->orderBy('sort_order')->get();
+        return Inertia::render('Admin/Testimonial/Index', ['testimonials' => $testimonials, 'slides' => $slides]);
+    }
+
+    public function storeTestimonial(Request $request)
+    {
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'content' => 'nullable|string',
+            'role' => 'nullable|string|max:255',
+            'video_url' => 'nullable|string|max:1000',
+            'image' => 'nullable|image|max:5120',
+            'duration' => 'nullable|string|max:50',
+            'sort_order' => 'nullable|integer',
+            'is_active' => 'nullable|boolean',
+        ]);
+
+        $data = $request->only(['name', 'content', 'role', 'video_url', 'duration', 'sort_order', 'is_active']);
+        $data['sort_order'] = $request->sort_order ?? 0;
+        $data['is_active'] = $request->boolean('is_active');
+
+        if ($request->hasFile('image')) {
+            $data['image'] = $request->file('image')->store('testimonials', 'public');
+        }
+
+        Testimonial::create($data);
+
+        return redirect()->route('admin.testimonials')->with('success', 'Testimonial added.');
+    }
+
+    public function updateTestimonial(Request $request, Testimonial $testimonial)
+    {
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'content' => 'nullable|string',
+            'role' => 'nullable|string|max:255',
+            'video_url' => 'nullable|string|max:1000',
+            'image' => 'nullable|image|max:5120',
+            'duration' => 'nullable|string|max:50',
+            'sort_order' => 'nullable|integer',
+            'is_active' => 'nullable|boolean',
+        ]);
+
+        $data = $request->only(['name', 'content', 'role', 'video_url', 'duration', 'sort_order', 'is_active']);
+        $data['sort_order'] = $request->sort_order ?? 0;
+        $data['is_active'] = $request->boolean('is_active');
+
+        if ($request->hasFile('image')) {
+            if ($testimonial->image) {
+                Storage::disk('public')->delete($testimonial->image);
+            }
+            $data['image'] = $request->file('image')->store('testimonials', 'public');
+        }
+
+        $testimonial->update($data);
+
+        return redirect()->route('admin.testimonials')->with('success', 'Testimonial updated.');
+    }
+
+    public function storeContactMessage(Request $request)
+    {
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|max:255',
+            'subject' => 'nullable|string|max:500',
+            'message' => 'required|string',
+        ]);
+
+        ContactMessage::create($request->only(['name', 'email', 'subject', 'message']));
+
+        return redirect()->back()->with('success', 'Your message has been sent successfully!');
+    }
+
+    public function destroyTestimonial(Testimonial $testimonial)
+    {
+        if ($testimonial->image) {
+            Storage::disk('public')->delete($testimonial->image);
+        }
+        $testimonial->delete();
+        return redirect()->route('admin.testimonials')->with('success', 'Testimonial deleted.');
+    }
+
+    public function contactMessages()
+    {
+        $messages = ContactMessage::latest()->paginate(20);
+        return Inertia::render('Admin/Contact/Index', ['messages' => $messages]);
+    }
+
+    public function contactEdit()
+    {
+        $offices = CompanyContent::whereIn('section_key', ['contact-office-cbe', 'contact-office-che'])->get()->keyBy('section_key');
+        $socials = CompanyContent::where('section_key', 'contact-socials')->first();
+        $contactPage = CompanyContent::where('section_key', 'contact-page')->first();
+        return Inertia::render('Admin/Contact/Edit', ['offices' => $offices, 'socials' => $socials, 'contactPage' => $contactPage]);
+    }
+
+    public function updateContactContent(Request $request)
+    {
+        $request->validate([
+            'offices' => 'required|array',
+            'offices.*.id' => 'nullable|exists:company_contents,id',
+            'offices.*.section_key' => 'required|string|max:255',
+            'offices.*.settings.name' => 'nullable|string|max:255',
+            'offices.*.settings.address' => 'nullable|string|max:500',
+            'offices.*.settings.phone' => 'nullable|string|max:50',
+            'offices.*.settings.map_url' => 'nullable|string|max:1000',
+            'socials' => 'nullable|array',
+            'socials.*' => 'nullable|string|max:500',
+        ]);
+
+        foreach ($request->offices as $item) {
+            $content = CompanyContent::find($item['id'] ?? 0);
+            if (!$content) continue;
+            $settings = array_merge($content->settings ?? [], [
+                'name' => $item['settings']['name'] ?? $content->settings['name'] ?? '',
+                'address' => $item['settings']['address'] ?? $content->settings['address'] ?? '',
+                'phone' => $item['settings']['phone'] ?? $content->settings['phone'] ?? '',
+                'map_url' => $item['settings']['map_url'] ?? $content->settings['map_url'] ?? '',
+            ]);
+            $content->update(['settings' => $settings]);
+        }
+
+        if ($request->socials) {
+            $socials = $request->socials_id
+                ? CompanyContent::find($request->socials_id)
+                : CompanyContent::where('section_key', 'contact-socials')->first();
+            if ($socials) {
+                $socials->update(['settings' => $request->socials]);
+            } else {
+                CompanyContent::create([
+                    'section_key' => 'contact-socials',
+                    'label' => 'Contact Social Links',
+                    'settings' => $request->socials,
+                    'sort_order' => 17,
+                    'is_active' => true,
+                ]);
+            }
+        }
+
+        if ($request->contactPage) {
+            $cp = $request->contactPage_id
+                ? CompanyContent::find($request->contactPage_id)
+                : CompanyContent::where('section_key', 'contact-page')->first();
+            if ($cp) {
+                $cp->update(['settings' => $request->contactPage]);
+            } else {
+                CompanyContent::create([
+                    'section_key' => 'contact-page',
+                    'label' => 'Contact Page Content',
+                    'settings' => $request->contactPage,
+                    'sort_order' => 16,
+                    'is_active' => true,
+                ]);
+            }
+        }
+
+        return redirect()->route('admin.contact.edit')->with('success', 'Contact content updated successfully.');
+    }
+
+    public function careers()
+    {
+        $jobs = Career::where('type', 'job')->orderBy('sort_order')->get();
+        return Inertia::render('Admin/Careers/Index', ['jobs' => $jobs]);
+    }
+
+    public function storeCareer(Request $request)
+    {
+        $request->validate([
+            'title' => 'required|string|max:500',
+            'description' => 'nullable|string',
+            'icon' => 'nullable|string|max:50',
+            'experience' => 'nullable|string|max:100',
+            'location' => 'nullable|string|max:255',
+            'tags' => 'nullable|array',
+            'tags.*' => 'string|max:100',
+            'date' => 'nullable|string|max:100',
     private function getSectionKey($section)
     {
         $map = [
@@ -820,6 +1337,27 @@ class AdminController extends Controller
             'is_active' => 'nullable|boolean',
         ]);
 
+        $data = $request->only(['title', 'description', 'icon', 'experience', 'location', 'tags', 'date', 'sort_order', 'is_active']);
+        $data['type'] = 'job';
+        $data['sort_order'] = $request->sort_order ?? 0;
+        $data['is_active'] = $request->boolean('is_active');
+
+        Career::create($data);
+
+        return redirect()->route('admin.careers')->with('success', 'Job added successfully.');
+    }
+
+    public function updateCareer(Request $request, Career $career)
+    {
+        $request->validate([
+            'title' => 'required|string|max:500',
+            'description' => 'nullable|string',
+            'icon' => 'nullable|string|max:50',
+            'experience' => 'nullable|string|max:100',
+            'location' => 'nullable|string|max:255',
+            'tags' => 'nullable|array',
+            'tags.*' => 'string|max:100',
+            'date' => 'nullable|string|max:100',
         Faq::create($request->only(['question', 'answer', 'sort_order', 'is_active']));
 
         return redirect()->route('admin.faqs')->with('success', 'FAQ created successfully.');
@@ -839,6 +1377,68 @@ class AdminController extends Controller
             'is_active' => 'nullable|boolean',
         ]);
 
+        $data = $request->only(['title', 'description', 'icon', 'experience', 'location', 'tags', 'date', 'sort_order', 'is_active']);
+        $data['is_active'] = $request->boolean('is_active');
+
+        $career->update($data);
+
+        return redirect()->route('admin.careers')->with('success', 'Job updated successfully.');
+    }
+
+    public function destroyCareer(Career $career)
+    {
+        $career->delete();
+        return redirect()->route('admin.careers')->with('success', 'Job deleted.');
+    }
+
+    public function storeJobApplication(Request $request)
+    {
+        $validated = $request->validate([
+            'career_id' => 'nullable|exists:careers,id',
+            'first_name' => 'required|string|max:255',
+            'email' => 'required|email|max:255',
+            'phone' => 'nullable|string|max:30',
+            'position' => 'nullable|string|max:255',
+            'resume' => 'nullable|file|mimes:pdf,doc,docx|max:5120',
+            'cover_letter' => 'nullable|file|mimes:pdf,doc,docx|max:5120',
+        ]);
+
+        if ($request->hasFile('resume')) {
+            $validated['resume'] = $request->file('resume')->store('applications/resume', 'public');
+        }
+        if ($request->hasFile('cover_letter')) {
+            $validated['cover_letter'] = $request->file('cover_letter')->store('applications/cover_letter', 'public');
+        }
+
+        JobApplication::create($validated);
+
+        return redirect()->back()->with('success', 'Application submitted successfully.');
+    }
+
+    public function applications()
+    {
+        $apps = JobApplication::with('career')->orderByDesc('created_at')->get();
+        return Inertia::render('Admin/Applications/Index', ['applications' => $apps]);
+    }
+
+    public function destroyApplication(JobApplication $application)
+    {
+        if ($application->resume) Storage::disk('public')->delete($application->resume);
+        if ($application->cover_letter) Storage::disk('public')->delete($application->cover_letter);
+        $application->delete();
+        return redirect()->route('admin.applications')->with('success', 'Application deleted.');
+    }
+
+    public function markMessageRead(ContactMessage $message)
+    {
+        $message->update(['is_read' => true]);
+        return redirect()->back()->with('success', 'Message marked as read.');
+    }
+
+    public function destroyMessage(ContactMessage $message)
+    {
+        $message->delete();
+        return redirect()->route('admin.contact')->with('success', 'Message deleted.');
         $faq->update($request->only(['question', 'answer', 'sort_order', 'is_active']));
 
         return redirect()->route('admin.faqs')->with('success', 'FAQ updated successfully.');

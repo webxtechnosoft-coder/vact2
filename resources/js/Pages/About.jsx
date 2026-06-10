@@ -3,103 +3,60 @@ import { Head } from '@inertiajs/react';
 
 export default function About({ contents }) {
     const s = (key) => contents?.[key] || {};
-    const img = (key) => s(key).image ? `/storage/${s(key).image}` : null;
-    const img2 = (key) => s(key).image2 ? `/storage/${s(key).image2}` : null;
+    const img = (key) => {
+        const p = s(key).image;
+        if (!p) return null;
+        if (p.startsWith('assets/') || p.startsWith('http')) return `/${p}`;
+        return `/storage/${p}`;
+    };
+    const img2 = (key) => {
+        const p = s(key).image2;
+        if (!p) return null;
+        if (p.startsWith('assets/') || p.startsWith('http')) return `/${p}`;
+        return `/storage/${p}`;
+    };
+    const dirSet = s('director').settings || {};
+    const dirPts = dirSet.points || ['24+ Years Experience', 'Expert in Product Development', 'Agile Project Management', 'Leadership & Team Building'];
     return (
         <MainLayout>
             <Head title="About" />
             <link rel="stylesheet" href="/assets/css/about.css" />
 
-    {/*Testimonial One Start*/}
+    {/* About Slides Carousel Start */}
     <section class="testimonial-one">
         <div class="container">
             <div class="testimonial-one__inner">
                 <div class="testimonial-one__carousel owl-carousel owl-theme">
-                    <div class="item">
-                        <div class="row align-items-center">
-                            <div class="col-xl-5 col-lg-5 col-md-12">
-                                <div style={{ "border": "1px solid rgba(0,142,210,0.5)", "borderRadius": "12px", "padding": "20px", "background": "rgba(0,0,0,0.2)" }}>
-                                    <div class="testimonial-one__img">
-                                        <img src="/assets/images/about/about-slide2.jpg" alt="" style={{ "width": "100%", "borderRadius": "8px" }} />
+                    {['about-slide-1', 'about-slide-2', 'about-slide-3', 'about-slide-4'].map((key) => {
+                        const slide = s(key);
+                        return (
+                            <div class="item" key={key}>
+                                <div class="row align-items-center">
+                                    <div class="col-xl-5 col-lg-5 col-md-12">
+                                        <div style={{ border: '1px solid rgba(0,142,210,0.5)', borderRadius: '12px', padding: '20px', background: 'rgba(0,0,0,0.2)' }}>
+                                            <div class="testimonial-one__img">
+                                                <img src={img(key) || '/assets/images/about/about1.png'} alt="" style={{ width: '100%', borderRadius: '8px' }} />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-xl-6 col-lg-6 col-md-12">
+                                        <div class="testimonial-one__single" style={{ paddingLeft: '40px' }}>
+                                            <div style={{ width: '60px', height: '60px', background: '#008ed2', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '20px' }}>
+                                                <i class="fas fa-quote-left" style={{ color: '#fff', fontSize: '24px' }}></i>
+                                            </div>
+                                            <h2 style={{ fontSize: '32px', fontWeight: 700, color: '#1f2937', marginBottom: '15px' }}>{slide.title || ''}{slide.subtitle ? <><br /><span style={{ color: '#008ed2' }}>{slide.subtitle}</span></> : ''}</h2>
+                                            <p class="testimonial-one__text" style={{ fontSize: '15px', lineHeight: '1.8', color: '#4B5563' }}>{slide.description || ''}</p>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-xl-6 col-lg-6 col-md-12">
-                                <div class="testimonial-one__single" style={{ "background": "transparent !important", "boxShadow": "none !important", "paddingLeft": "40px" }}>
-                                    <div style={{ "width": "60px", "height": "60px", "background": "#008ed2", "borderRadius": "50%", "display": "flex", "alignItems": "center", "justifyContent": "center", "marginBottom": "20px" }}>
-                                        <i class="fas fa-quote-left" style={{ "color": "#fff", "fontSize": "24px" }}></i>
-                                    </div>
-                                    <h2 style={{ "fontSize": "32px", "fontWeight": "700", "color": "#fff", "marginBottom": "15px" }}>Embedded Systems Development</h2>
-                                    <p class="testimonial-one__text" style={{ "fontSize": "15px", "lineHeight": "1.8", "color": "#a0aec0" }}>We specialize in end-to-end embedded systems development, from concept to production. Our team delivers robust, scalable, and cost-effective solutions tailored to your specific needs across industries.</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="item">
-                        <div class="row align-items-center">
-                            <div class="col-xl-5 col-lg-5 col-md-12">
-                                <div style={{ "border": "1px solid rgba(0,142,210,0.5)", "borderRadius": "12px", "padding": "20px", "background": "rgba(0,0,0,0.2)" }}>
-                                    <div class="testimonial-one__img">
-                                        <img src="/assets/images/about/about-slide1.jpg" alt="" style={{ "width": "100%", "borderRadius": "8px" }} />
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-xl-6 col-lg-6 col-md-12">
-                                <div class="testimonial-one__single" style={{ "background": "transparent !important", "boxShadow": "none !important", "paddingLeft": "40px" }}>
-                                    <div style={{ "width": "60px", "height": "60px", "background": "#008ed2", "borderRadius": "50%", "display": "flex", "alignItems": "center", "justifyContent": "center", "marginBottom": "20px" }}>
-                                        <i class="fas fa-quote-left" style={{ "color": "#fff", "fontSize": "24px" }}></i>
-                                    </div>
-                                    <h2 style={{ "fontSize": "32px", "fontWeight": "700", "color": "#fff", "marginBottom": "15px" }}>Industrial Automation & Control</h2>
-                                    <p class="testimonial-one__text" style={{ "fontSize": "15px", "lineHeight": "1.8", "color": "#a0aec0" }}>Transform your manufacturing with our cutting-edge industrial automation solutions. From PLC programming to complete SCADA systems, we help you achieve operational excellence.</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="item">
-                        <div class="row align-items-center">
-                            <div class="col-xl-5 col-lg-5 col-md-12">
-                                <div style={{ "border": "1px solid rgba(0,142,210,0.5)", "borderRadius": "12px", "padding": "20px", "background": "rgba(0,0,0,0.2)" }}>
-                                    <div class="testimonial-one__img">
-                                        <img src="/assets/images/about/about-slide3.jpg" alt="" style={{ "width": "100%", "borderRadius": "8px" }} />
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-xl-6 col-lg-6 col-md-12">
-                                <div class="testimonial-one__single" style={{ "background": "transparent !important", "boxShadow": "none !important", "paddingLeft": "40px" }}>
-                                    <div style={{ "width": "60px", "height": "60px", "background": "#008ed2", "borderRadius": "50%", "display": "flex", "alignItems": "center", "justifyContent": "center", "marginBottom": "20px" }}>
-                                        <i class="fas fa-quote-left" style={{ "color": "#fff", "fontSize": "24px" }}></i>
-                                    </div>
-                                    <h2 style={{ "fontSize": "32px", "fontWeight": "700", "color": "#fff", "marginBottom": "15px" }}>FPGA & VLSI Design Services</h2>
-                                    <p class="testimonial-one__text" style={{ "fontSize": "15px", "lineHeight": "1.8", "color": "#a0aec0" }}>Our FPGA and VLSI design team delivers high-performance digital solutions for complex applications, ensuring optimal performance, power efficiency, and reliability.</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="item">
-                        <div class="row align-items-center">
-                            <div class="col-xl-5 col-lg-5 col-md-12">
-                                <div style={{ "border": "1px solid rgba(0,142,210,0.5)", "borderRadius": "12px", "padding": "20px", "background": "rgba(0,0,0,0.2)" }}>
-                                    <div class="testimonial-one__img">
-                                        <img src="/assets/images/about/about-slide4.jpg" alt="" style={{ "width": "100%", "borderRadius": "8px" }} />
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-xl-6 col-lg-6 col-md-12">
-                                <div class="testimonial-one__single" style={{ "background": "transparent !important", "boxShadow": "none !important", "paddingLeft": "40px" }}>
-                                    <div style={{ "width": "60px", "height": "60px", "background": "#008ed2", "borderRadius": "50%", "display": "flex", "alignItems": "center", "justifyContent": "center", "marginBottom": "20px" }}>
-                                        <i class="fas fa-quote-left" style={{ "color": "#fff", "fontSize": "24px" }}></i>
-                                    </div>
-                                    <h2 style={{ "fontSize": "32px", "fontWeight": "700", "color": "#fff", "marginBottom": "15px" }}>IoT & Edge AI Solutions</h2>
-                                    <p class="testimonial-one__text" style={{ "fontSize": "15px", "lineHeight": "1.8", "color": "#a0aec0" }}>Drive innovation with our IoT and Edge AI solutions that connect devices, analyze data in real-time, and deliver actionable insights for smarter decision-making.</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                        );
+                    })}
                 </div>
             </div>
         </div>
     </section>
-    {/*Testimonial One End*/}
+    {/* About Slides Carousel End */}
 
 
     {/*About Three Start*/}
@@ -117,10 +74,10 @@ export default function About({ contents }) {
                             </div>
                             <div class="about-three__experience-box">
                                 <div class="about-three__experience-count">
-                                    <h3 class="odometer" data-count="15">00</h3>
-                                    <span>+</span>
+                                    <h3 class="odometer" data-count={s('about-content').settings?.stat_years || 15}>{s('about-content').settings?.stat_years || 15}</h3>
+                                    <span>{s('about-content').settings?.stat_years_suffix || '+'}</span>
                                 </div>
-                                <p class="about-three__experience-count-text">Years Of Experience</p>
+                                <p class="about-three__experience-count-text">{s('about-content').settings?.stat_years_label || 'Years Of Experience'}</p>
                             </div>
                             <div class="about-three__shape-1"></div>
                         </div>
@@ -215,30 +172,30 @@ export default function About({ contents }) {
                             <ul class="about-one__points list-unstyled">
                                 <li>
                                     <div class="icon"><span class="icon-check-mark"></span></div>
-                                    <h3>24+ Years Experience</h3>
+                                    <h3>{dirPts[0]}</h3>
                                 </li>
                                 <li>
                                     <div class="icon"><span class="icon-check-mark"></span></div>
-                                    <h3>Expert in Product Development</h3>
+                                    <h3>{dirPts[1]}</h3>
                                 </li>
                             </ul>
                             <ul class="about-one__points list-unstyled">
                                 <li>
                                     <div class="icon"><span class="icon-check-mark"></span></div>
-                                    <h3>Agile Project Management</h3>
+                                    <h3>{dirPts[2]}</h3>
                                 </li>
                                 <li>
                                     <div class="icon"><span class="icon-check-mark"></span></div>
-                                    <h3>Leadership & Team Building</h3>
+                                    <h3>{dirPts[3]}</h3>
                                 </li>
                             </ul>
                         </div>
                         <div class="about-one__btn-and-video">
                             <div class="about-one__btn-box">
-                                <a href="https://www.vact-tech.com/wp-content/uploads/2021/06/Vact-brochure-High.pdf" class="thm-btn">Download Digital Brochure<span class="fas fa-arrow-right"></span></a>
+                                <a href={dirSet.brochure_link || 'https://www.vact-tech.com/wp-content/uploads/2021/06/Vact-brochure-High.pdf'} class="thm-btn">Download Digital Brochure<span class="fas fa-arrow-right"></span></a>
                             </div>
                             <div class="about-one__video-link">
-                                <a href="https://www.linkedin.com/in/kumaravelpandurangan/" target="_blank">
+                                <a href={dirSet.linkedin_url || 'https://www.linkedin.com/in/kumaravelpandurangan/'} target="_blank">
                                     <div class="about-one__video-icon">
                                         <span class="fab fa-linkedin-in"></span>
                                         <i class="ripple"></i>
@@ -289,7 +246,7 @@ export default function About({ contents }) {
                                         <p class="testimonial-two__text">{s('testimonial-1').description || ''}</p>
                                         <div class="testimonial-two__client-info">
                                             <div class="testimonial-two__client-img">
-                                                <img src={img('testimonial-1') || '/assets/images/testimonial/testimonial-saravanan.jpg'} alt="" />
+                                                <img src={img('testimonial-1') || '/assets/images/testimonial/testimonial-one-img-1.jpg'} alt="" />
                                             </div>
                                             <div class="testimonial-two__client-content">
                                                 <h3><a href="#">{s('testimonial-1').title || 'Saravanan G'}</a></h3>
@@ -325,7 +282,7 @@ export default function About({ contents }) {
                                         <p class="testimonial-two__text">{s('testimonial-2').description || ''}</p>
                                         <div class="testimonial-two__client-info">
                                             <div class="testimonial-two__client-img">
-                                                <img src={img('testimonial-2') || '/assets/images/testimonial/testimonial-2.jpg'} alt="" />
+                                                <img src={img('testimonial-2') || '/assets/images/testimonial/testimonial-2-1.jpg'} alt="" />
                                             </div>
                                             <div class="testimonial-two__client-content">
                                                 <h3><a href="#">{s('testimonial-2').title || 'Priya M'}</a></h3>
@@ -361,7 +318,7 @@ export default function About({ contents }) {
                                         <p class="testimonial-two__text">{s('testimonial-3').description || ''}</p>
                                         <div class="testimonial-two__client-info">
                                             <div class="testimonial-two__client-img">
-                                                <img src={img('testimonial-3') || '/assets/images/testimonial/testimonial-3.jpg'} alt="" />
+                                                <img src={img('testimonial-3') || '/assets/images/testimonial/testimonial-2-2.jpg'} alt="" />
                                             </div>
                                             <div class="testimonial-two__client-content">
                                                 <h3><a href="#">{s('testimonial-3').title || 'Ramesh K'}</a></h3>
@@ -397,7 +354,7 @@ export default function About({ contents }) {
                                         <p class="testimonial-two__text">{s('testimonial-4').description || ''}</p>
                                         <div class="testimonial-two__client-info">
                                             <div class="testimonial-two__client-img">
-                                                <img src={img('testimonial-4') || '/assets/images/testimonial/testimonial-4.jpg'} alt="" />
+                                                <img src={img('testimonial-4') || '/assets/images/testimonial/testimonial-4-1.jpg'} alt="" />
                                             </div>
                                             <div class="testimonial-two__client-content">
                                                 <h3><a href="#">{s('testimonial-4').title || 'Anita S'}</a></h3>

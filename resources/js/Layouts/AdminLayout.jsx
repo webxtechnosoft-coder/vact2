@@ -1,4 +1,4 @@
-import { Link, usePage, router } from '@inertiajs/react';
+import { Link, usePage } from '@inertiajs/react';
 import { useEffect, useState } from 'react';
 
 export default function AdminLayout({ children }) {
@@ -6,6 +6,7 @@ export default function AdminLayout({ children }) {
     const flash = usePage().props.flash || {};
     const [sidebarOpen, setSidebarOpen] = useState(false);
     const [showFlash, setShowFlash] = useState(!!(flash.success || flash.error));
+    const [openMenus, setOpenMenus] = useState({});
 
     useEffect(() => {
         if (flash.success || flash.error) {
@@ -21,6 +22,40 @@ export default function AdminLayout({ children }) {
         return false;
     };
 
+    const toggleMenu = (label) => {
+        setOpenMenus((prev) => ({ ...prev, [label]: !prev[label] }));
+    };
+
+    const navItems = [
+        { label: 'Dashboard', path: '/admin', icon: 'M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6' },
+        { label: 'Sliders', path: '/admin/sliders', icon: 'M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2' },
+        { label: 'Company', path: '/admin/company', icon: 'M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4' },
+        {
+            label: 'About',
+            icon: 'M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z',
+            children: [
+                { label: 'About Us', path: '/admin/about' },
+                { label: 'Blog', path: '/admin/blogs' },
+                { label: 'Testimonials', path: '/admin/testimonials' },
+                { label: 'Gallery', path: '/admin/galleries' },
+            ],
+        },
+        { label: 'Careers', path: '/admin/careers', icon: 'M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z' },
+        {
+            label: 'Our Services',
+            icon: 'M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.066 2.573c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.573 1.066c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.066-2.573c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z M15 12a3 3 0 11-6 0 3 3 0 016 0z',
+            children: [
+                { label: 'Industrial Automation & Control', path: '/admin/services/industrial-automation' },
+                { label: 'Embedded System', path: '/admin/services/embedded-systems' },
+                { label: 'Embedded Offshore Outsourcing', path: '/admin/services/embedded-offshore-outsourcing' },
+                { label: 'Fuel Monitoring System', path: '/admin/services/fuel-monitoring-system' },
+                { label: 'Civil Engineering', path: '/admin/services/civil-pmc' },
+                { label: 'Human Resources', path: '/admin/services/human-resource' },
+            ],
+        },
+        { label: 'Applications', path: '/admin/applications', icon: 'M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z' },
+        { label: 'Contact', path: '/admin/contact', icon: 'M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z' },
+        { label: 'Users', path: '/admin/users', icon: 'M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z' },
     const isHomeActive = () => {
         const path = window.location.pathname;
         return path.startsWith('/admin/sliders') ||
@@ -251,6 +286,51 @@ export default function AdminLayout({ children }) {
                                             );
                                         }
 
+                <nav style={{ flex: 1, padding: '4px 12px' }}>
+                    {navItems.map((item) =>
+                        item.children ? (
+                            <div key={item.label}>
+                                <button
+                                    onClick={() => toggleMenu(item.label)}
+                                    style={{ display: 'flex', alignItems: 'center', gap: '12px', padding: '10px 14px', marginBottom: '2px', borderRadius: '10px', fontSize: '14px', fontWeight: 500, cursor: 'pointer', width: '100%', border: 'none', background: 'none', textAlign: 'left', color: openMenus[item.label] ? '#008ed2' : '#4B5563', backgroundColor: openMenus[item.label] ? '#eef9ff' : 'transparent', transition: 'all 0.15s' }}
+                                >
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke={openMenus[item.label] ? '#008ed2' : '#9ca3af'} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                                        <path d={item.icon} />
+                                    </svg>
+                                    <span style={{ flex: 1 }}>{item.label}</span>
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{ transform: openMenus[item.label] ? 'rotate(180deg)' : 'rotate(0deg)', transition: 'transform 0.2s' }}>
+                                        <path d="M19 9l-7 7-7-7" />
+                                    </svg>
+                                </button>
+                                {openMenus[item.label] && (
+                                    <div style={{ marginLeft: '20px' }}>
+                                        {item.children.map((child) => (
+                                            <Link
+                                                key={child.path}
+                                                href={child.path}
+                                                style={{ display: 'flex', alignItems: 'center', gap: '12px', padding: '8px 14px', marginBottom: '2px', borderRadius: '10px', fontSize: '13px', fontWeight: 500, textDecoration: 'none', color: isActive(child.path) ? '#008ed2' : '#4B5563', backgroundColor: isActive(child.path) ? '#eef9ff' : 'transparent', transition: 'all 0.15s' }}
+                                            >
+                                                <span style={{ width: '6px', height: '6px', borderRadius: '50%', backgroundColor: isActive(child.path) ? '#008ed2' : '#d1d5db', flexShrink: 0 }} />
+                                                {child.label}
+                                            </Link>
+                                        ))}
+                                    </div>
+                                )}
+                            </div>
+                        ) : (
+                            <Link
+                                key={item.path}
+                                href={item.path}
+                                style={{ display: 'flex', alignItems: 'center', gap: '12px', padding: '10px 14px', marginBottom: '2px', borderRadius: '10px', fontSize: '14px', fontWeight: 500, textDecoration: 'none', color: isActive(item.path) ? '#008ed2' : '#4B5563', backgroundColor: isActive(item.path) ? '#eef9ff' : 'transparent', transition: 'all 0.15s' }}
+                            >
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke={isActive(item.path) ? '#008ed2' : '#9ca3af'} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                                    <path d={item.icon} />
+                                </svg>
+                                {item.label}
+                            </Link>
+                        )
+                    )}
+                </nav>
                                         const active = window.location.pathname + window.location.search === sec.path;
                                         return (
                                             <Link
