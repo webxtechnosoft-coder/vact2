@@ -21,13 +21,6 @@ class DatabaseSeeder extends Seeder
             ]);
         }
 
-        $this->call(CompanyContentSeeder::class);
-        $this->call(GallerySeeder::class);
-        $this->call(BlogSeeder::class);
-        $this->call(TestimonialSeeder::class);
-        $this->call(CareerSeeder::class);
-        $this->call(ServicesSeeder::class);
-
         if (Slider::count() === 0) {
         Slider::insert([
             [

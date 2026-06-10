@@ -1,18 +1,7 @@
 import MainLayout from '@/Layouts/MainLayout';
 import { Head } from '@inertiajs/react';
 
-const imgUrl = (p) => {
-    if (!p) return null;
-    if (p.startsWith('assets/') || p.startsWith('http')) return `/${p}`;
-    return `/storage/${p}`;
-};
-
-export default function Gallery({ galleries }) {
-    const items = galleries?.length ? galleries : Array.from({ length: 21 }, (_, i) => ({
-        id: i + 1,
-        image: `assets/images/gallery1/gal${i + 1}.png`,
-        title: '',
-    }));
+export default function Gallery() {
     return (
         <MainLayout>
             <Head title="Gallery" />
@@ -45,8 +34,9 @@ export default function Gallery({ galleries }) {
 
 
     {/* Gallery Elite Start */}
-    <section class="gallery-elite-section" style={{ marginTop: '150px' }}>
+    <section class="gallery-elite-section" style={{ "marginTop": "150px" }}>
         <div class="container">
+
             <div class="section-title text-center sec-title-animation animation-style1">
                 <div class="section-title__tagline-box">
                     <div class="section-title__tagline-shape"></div>
@@ -55,16 +45,16 @@ export default function Gallery({ galleries }) {
                 </div>
                 <h2 class="section-title__title title-animation">Explore Our Training &
                     <span>Innovation Gallery</span>
+
                 </h2>
-                <p>Hands-on training, live projects, workshops, internships, and student activities at VAct Technologies..</p>
+                <p>Hands-on training, live projects, workshops, internships, and student activities at VAct
+                    Technologies..</p>
             </div>
-        </div>
-        <div style={{ maxWidth: '100%', padding: '0 15px' }}>
             <div class="gallery-custom-grid">
-                {items.map((item, index) => (
-                    <div className="gallery-custom-grid-item" key={item.id || index}>
+                {["gal1","gal2","gal3","gal4","gal5","gal6","gal7","gal8","gal9","gal10","gal11","gal12","gal13","gal14","gal15","gal16"].map((img, index) => (
+                    <div className="gallery-custom-grid-item" key={index}>
                         <div className="gallery-card wow fadeInUp" data-wow-delay="100ms">
-                            <img src={imgUrl(item.image)} alt={item.title || 'Gallery Image'} />
+                            <img src={`/assets/images/gallery1/${img}.png`} alt="Gallery Image" />
                         </div>
                     </div>
                 ))}

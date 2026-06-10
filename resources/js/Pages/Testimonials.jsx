@@ -1,46 +1,87 @@
 import MainLayout from '@/Layouts/MainLayout';
 import { Head } from '@inertiajs/react';
 
-const imgUrl = (p) => {
-    if (!p) return null;
-    if (p.startsWith('assets/') || p.startsWith('http')) return `/${p}`;
-    return `/storage/${p}`;
-};
-
-export default function Testimonials({ slides, testimonials }) {
-    const delays = ['100ms', '200ms', '300ms'];
+export default function Testimonials() {
     return (
         <MainLayout>
             <Head title="Testimonials" />
             <link rel="stylesheet" href="/assets/css/testimonials-elite.css" />
-            <link rel="stylesheet" href="/assets/css/about.css" />
+{/*Page Header Start*/}
+    {/* <section class="page-header">
+        <div class="page-header__bg" style={{ backgroundImage: "url(assets/images/backgrounds/page-header-bg.jpg)" }}>
+        </div>
+        <div class="container">
+            <div class="page-header__inner">
+                <h3>Testimonials</h3>
+                <div class="thm-breadcrumb__inner">
+                    <ul class="thm-breadcrumb list-unstyled">
+                        <li><a href="index.html">Home</a></li>
+                        <li><span class="fas fa-angle-right"></span></li>
+                        <li>Testimonials</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="bubbleContainer">
+            <div class="bubble-1"></div>
+            <div class="bubble-2"></div>
+            <div class="bubble-3"></div>
+        </div>
+    </section> */}
+    {/*Page Header End*/}
 
-          
 
-            {/*Testimonial One Start*/}
-            <section class="testimonial-one">
-                <div class="container">
-                    <div class="testimonial-one__inner">
-                        <div class="testimonial-one__carousel owl-carousel owl-theme">
 
-                            {slides.map((slide) => (
-                            <div key={slide.id} class="item">
-                                <div class="row align-items-center">
-                                    <div class="col-xl-5 col-lg-5 col-md-12">
-                                        <div style={{ border: '1px solid rgba(0,142,210,0.5)', borderRadius: '12px', padding: '20px', background: 'rgba(0,0,0,0.2)' }}>
-                                            <div class="testimonial-one__img">
-                                                <img src={imgUrl(slide.image)} alt="" style={{ width: '100%', borderRadius: '8px' }} />
-                                            </div>
-                                        </div>
+    {/*Testimonial One Start*/}
+    <section class="testimonial-one">
+        <div class="container">
+            <div class="testimonial-one__inner">
+                <div class="testimonial-one__carousel owl-carousel owl-theme">
+
+                    {/*Item 1*/}
+                    <div class="item">
+                        <div class="row align-items-center">
+                            <div class="col-xl-5 col-lg-5 col-md-12">
+                                <div
+                                    style={{ "border": "1px solid rgba(0,142,210,0.5)", "borderRadius": "12px", "padding": "20px", "background": "rgba(0,0,0,0.2)" }}>
+                                    <div class="testimonial-one__img">
+                                        <img src="/assets/images/about/about3.png" alt=""
+                                            style={{ "width": "100%", "borderRadius": "8px" }} />
                                     </div>
-                                    <div class="col-xl-6 col-lg-6 col-md-12">
-                                        <div class="testimonial-one__single" style={{ background: 'transparent !important', boxShadow: 'none !important', paddingLeft: '40px' }}>
-                                            <div style={{ width: '60px', height: '60px', background: '#008ed2', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '20px' }}>
-                                                <i class="fas fa-quote-left" style={{ color: '#fff', fontSize: '24px' }}></i>
-                                            </div>
-                                            <h2 style={{ fontSize: '32px', fontWeight: 700, color: '#fff', marginBottom: '15px' }}>{slide.title}{slide.subtitle ? <><br /><span style={{ color: '#008ed2' }}>{slide.subtitle}</span></> : ''}</h2>
-                                            <p class="testimonial-one__text" style={{ fontSize: '15px', lineHeight: 1.8, color: '#a0aec0' }}>{slide.description}</p>
-                                        </div>
+                                </div>
+                            </div>
+                            <div class="col-xl-6 col-lg-6 col-md-12">
+                                <div class="testimonial-one__single"
+                                    style={{ "background": "transparent !important", "boxShadow": "none !important", "paddingLeft": "40px" }}>
+                                    <div
+                                        style={{ "width": "60px", "height": "60px", "background": "#008ed2", "borderRadius": "50%", "display": "flex", "alignItems": "center", "justifyContent": "center", "marginBottom": "20px" }}>
+                                        <i class="fas fa-quote-left" style={{ "color": "#fff", "fontSize": "24px" }}></i>
+                                    </div>
+                                    <h2 style={{ "fontSize": "32px", "fontWeight": "700", "color": "#fff", "marginBottom": "15px" }}>
+                                        VAct EmbCore <br /><span style={{ "color": "#008ed2" }}>Development Board</span></h2>
+                                    <p class="testimonial-one__text"
+                                        style={{ "fontSize": "15px", "lineHeight": "1.8", "color": "#a0aec0" }}>VAct EmbCore
+                                        Development Board is designed for embedded system development using ARM
+                                        Cortex-M4 architecture. It supports CAN, SPI, I2C, UART, USB, and SD Card
+                                        interfaces for real-time applications and data logging. The board is integrated
+                                        with STM32CubeIDE for easy programming and debugging. It is ideal for students,
+                                        developers, and embedded learning projects.</p>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    {/*Item 2*/}
+                    <div class="item">
+                        <div class="row align-items-center">
+                            <div class="col-xl-5 col-lg-5 col-md-12">
+                                <div
+                                    style={{ "border": "1px solid rgba(0,142,210,0.5)", "borderRadius": "12px", "padding": "20px", "background": "rgba(0,0,0,0.2)" }}>
+                                    <div class="testimonial-one__img">
+                                        <img src="/assets/images/about/about2.png" alt=""
+                                            style={{ "width": "100%", "borderRadius": "8px" }} />
+                                    </div>
                                 </div>
                             </div>
                             <div class="col-xl-6 col-lg-6 col-md-12">
@@ -50,14 +91,97 @@ export default function Testimonials({ slides, testimonials }) {
                                         style={{ "width": "60px", "height": "60px", "background": "#008ed2", "borderRadius": "50%", "display": "flex", "alignItems": "center", "justifyContent": "center", "marginBottom": "20px" }}>
                                         <i class="fas fa-quote-left" style={{ "color": "#fff", "fontSize": "24px" }}></i>
                                     </div>
+                                    <h2 style={{ "fontSize": "32px", "fontWeight": "700", "color": "#fff", "marginBottom": "15px" }}>Our
+                                        Services <br /><span style={{ "color": "#008ed2" }}>& Solutions</span></h2>
+                                    <p class="testimonial-one__text"
+                                        style={{ "fontSize": "15px", "lineHeight": "1.8", "color": "#a0aec0" }}><strong>Our
+                                            Services</strong> include Embedded Systems Development, Industrial
+                                        Automation & Control, Fuel Monitoring Systems, IoT Solutions, and Embedded
+                                        Offshore Outsourcing services. We provide innovative and reliable technology
+                                        solutions for real-time applications, smart automation, and next-generation
+                                        embedded products tailored for industrial and learning environments.</p>
                                 </div>
                             </div>
-                            ))}
+
                         </div>
                     </div>
+
+                    {/*Item 3*/}
+                    <div class="item">
+                        <div class="row align-items-center">
+                            <div class="col-xl-5 col-lg-5 col-md-12">
+                                <div
+                                    style={{ "border": "1px solid rgba(0,142,210,0.5)", "borderRadius": "12px", "padding": "20px", "background": "rgba(0,0,0,0.2)" }}>
+                                    <div class="testimonial-one__img">
+                                        <img src="/assets/images/about/about1.png" alt=""
+                                            style={{ "width": "100%", "borderRadius": "8px" }} />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xl-6 col-lg-6 col-md-12">
+                                <div class="testimonial-one__single"
+                                    style={{ "background": "transparent !important", "boxShadow": "none !important", "paddingLeft": "30px" }}>
+                                    <div
+                                        style={{ "width": "60px", "height": "60px", "background": "#008ed2", "borderRadius": "50%", "display": "flex", "alignItems": "center", "justifyContent": "center", "marginBottom": "20px" }}>
+                                        <i class="fas fa-quote-left" style={{ "color": "#fff", "fontSize": "24px" }}></i>
+                                    </div>
+                                    <h2 style={{ "fontSize": "32px", "fontWeight": "700", "color": "#fff", "marginBottom": "15px" }}>Our
+                                        Products <br /><span style={{ "color": "#008ed2" }}>& Solutions</span></h2>
+                                    <p class="testimonial-one__text"
+                                        style={{ "fontSize": "15px", "lineHeight": "1.8", "color": "#a0aec0" }}><strong>Our
+                                            Products</strong> include advanced Vending Machine solutions for smart and
+                                        automated dispensing applications. We provide Automatic Milk, Oil, Cool Drink,
+                                        and Coffee Vending Machines with reliable and user-friendly operation. These
+                                        machines are designed for commercial, industrial, and retail environments. They
+                                        ensure efficient, hygienic, and high-performance dispensing technology.</p>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    {/*Item 4*/}
+                    <div class="item">
+                        <div class="row align-items-center">
+                            <div class="col-xl-5 col-lg-5 col-md-12">
+                                <div
+                                    style={{ "border": "1px solid rgba(0,142,210,0.5)", "borderRadius": "12px", "padding": "20px", "background": "rgba(0,0,0,0.2)" }}>
+                                    <div class="testimonial-one__img">
+                                        <img src="/assets/images/about/about4.png" alt=""
+                                            style={{ "width": "100%", "borderRadius": "8px" }} />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xl-6 col-lg-6 col-md-12">
+                                <div class="testimonial-one__single"
+                                    style={{ "background": "transparent !important", "boxShadow": "none !important", "paddingLeft": "30px" }}>
+                                    <div
+                                        style={{ "width": "60px", "height": "60px", "background": "#008ed2", "borderRadius": "50%", "display": "flex", "alignItems": "center", "justifyContent": "center", "marginBottom": "20px" }}>
+                                        <i class="fas fa-quote-left" style={{ "color": "#fff", "fontSize": "24px" }}></i>
+                                    </div>
+                                    <h2 style={{ "fontSize": "32px", "fontWeight": "700", "color": "#fff", "marginBottom": "15px" }}>
+                                        VAct Technologies <br /><span style={{ "color": "#008ed2" }}>Transforming Ideas</span>
+                                    </h2>
+                                    <p class="testimonial-one__text"
+                                        style={{ "fontSize": "15px", "lineHeight": "1.8", "color": "#a0aec0" }}>VAct Technologies
+                                        transforms innovative ideas into complete product solutions with advanced design
+                                        and development services. We deliver efficient solutions for industrial,
+                                        automation, and embedded applications using modern and reliable technology. From
+                                        concept to final product development, we ensure smart, innovative, and
+                                        high-quality solutions.</p>
+                                </div>
+                            </div>
+                            <div class="col-xl-1 col-lg-1 col-md-12 d-flex justify-content-center">
+
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
-            </section>
-            {/*Testimonial One End*/}
+            </div>
+        </div>
+    </section>
+
 
     {/* Video Testimonials Start */}
     <section class="video-testimonials-section">
@@ -75,35 +199,173 @@ export default function Testimonials({ slides, testimonials }) {
                 <p>Real experience,real growth. Hear Stories from our happy associates and parents.</p>
             </div>
             <div class="row">
-                {testimonials.map((t, i) => (
-                    <div key={t.id} class={`col-xl-4 col-lg-6 wow fadeInUp`} data-wow-delay={delays[i % 3]}>
-                        <div class="video-card">
-                            <a href={t.video_url || '#'} class="video-popup" target="_blank">
-                                <div class="video-card__thumbnail">
-                                    <img src={imgUrl(t.image) || '/assets/images/Testimonials/test.png'} alt={t.name} />
-                                    <div class="video-card__play-btn">
-                                        <i class="fas fa-play"></i>
-                                    </div>
-                                    {t.duration && <div class="video-card__duration">{t.duration}</div>}
+                {/* Video Card 1 */}
+                <div class="col-xl-4 col-lg-6 wow fadeInUp" data-wow-delay="100ms">
+                    <div class="video-card">
+                        <a href="https://youtube.com/shorts/XyuauoCURA8?si=T1gyv2hELsYkEnIJ" class="video-popup">
+                            <div class="video-card__thumbnail">
+                                <img src="/assets/images/Testimonials/test.png" alt="Anita Sharma" />
+                                <div class="video-card__play-btn">
+                                    <i class="fas fa-play"></i>
                                 </div>
-                            </a>
-                            <div class="video-card__content">
-                                <div class="video-card__user">
-                                    <div class="video-card__avatar">
-                                        <i class="fas fa-user"></i>
-                                    </div>
-                                    <div class="video-card__user-info">
-                                        <h4>{t.name}</h4>
-                                        <p>{t.role || ''}</p>
-                                    </div>
+                                <div class="video-card__duration">1:25</div>
+                            </div>
+                        </a>
+                        <div class="video-card__content">
+                            <div class="video-card__user">
+                                <div class="video-card__avatar">
+                                    <i class="fas fa-user"></i>
                                 </div>
-                                <div class="video-card__quote">
-                                    <i class="fas fa-quote-right"></i>
+                                <div class="video-card__user-info">
+                                    <h4>Anita Sharma</h4>
+                                    <p>Parent of Ayaan</p>
                                 </div>
+                            </div>
+                            <div class="video-card__quote">
+                                <i class="fas fa-quote-right"></i>
                             </div>
                         </div>
                     </div>
-                ))}
+                </div>
+
+                {/* Video Card 2 */}
+                <div class="col-xl-4 col-lg-6 wow fadeInUp" data-wow-delay="200ms">
+                    <div class="video-card">
+                        <a href="https://youtube.com/shorts/qy5G0AJ9vjg?si=rv2AqJmMARPSPgxx" class="video-popup">
+                            <div class="video-card__thumbnail">
+                                <img src="/assets/images/Testimonials/test.png" alt="Rohit Verma" />
+                                <div class="video-card__play-btn">
+                                    <i class="fas fa-play"></i>
+                                </div>
+                                <div class="video-card__duration">1:40</div>
+                            </div>
+                        </a>
+                        <div class="video-card__content">
+                            <div class="video-card__user">
+                                <div class="video-card__avatar">
+                                    <i class="fas fa-user" style={{ "color": "#28a745" }}></i>
+                                </div>
+                                <div class="video-card__user-info">
+                                    <h4>Rohit Verma</h4>
+                                    <p>Parent of Myra</p>
+                                </div>
+                            </div>
+                            <div class="video-card__quote">
+                                <i class="fas fa-quote-right"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                {/* Video Card 3 */}
+                <div class="col-xl-4 col-lg-6 wow fadeInUp" data-wow-delay="300ms">
+                    <div class="video-card">
+                        <a href="https://youtube.com/shorts/XyuauoCURA8?si=T1gyv2hELsYkEnIJ" class="video-popup">
+                            <div class="video-card__thumbnail">
+                                <img src="/assets/images/Testimonials/test.png" alt="Neha Kapoor" />
+                                <div class="video-card__play-btn">
+                                    <i class="fas fa-play"></i>
+                                </div>
+                                <div class="video-card__duration">1:18</div>
+                            </div>
+                        </a>
+                        <div class="video-card__content">
+                            <div class="video-card__user">
+                                <div class="video-card__avatar">
+                                    <i class="fas fa-user" style={{ "color": "#6f42c1" }}></i>
+                                </div>
+                                <div class="video-card__user-info">
+                                    <h4>Neha Kapoor</h4>
+                                    <p>Parent of Vihaan</p>
+                                </div>
+                            </div>
+                            <div class="video-card__quote">
+                                <i class="fas fa-quote-right"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-4 col-lg-6 wow fadeInUp" data-wow-delay="100ms">
+                    <div class="video-card">
+                        <a href="https://youtube.com/shorts/XyuauoCURA8?si=T1gyv2hELsYkEnIJ" class="video-popup">
+                            <div class="video-card__thumbnail">
+                                <img src="/assets/images/Testimonials/test.png" alt="Anita Sharma" />
+                                <div class="video-card__play-btn">
+                                    <i class="fas fa-play"></i>
+                                </div>
+                                <div class="video-card__duration">1:25</div>
+                            </div>
+                        </a>
+                        <div class="video-card__content">
+                            <div class="video-card__user">
+                                <div class="video-card__avatar">
+                                    <i class="fas fa-user"></i>
+                                </div>
+                                <div class="video-card__user-info">
+                                    <h4>Priya Nair</h4>
+                                    <p>Parent of Vivaan</p>
+                                </div>
+                            </div>
+                            <div class="video-card__quote">
+                                <i class="fas fa-quote-right"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-4 col-lg-6 wow fadeInUp" data-wow-delay="100ms">
+                    <div class="video-card">
+                        <a href="https://youtube.com/shorts/XyuauoCURA8?si=T1gyv2hELsYkEnIJ" class="video-popup">
+                            <div class="video-card__thumbnail">
+                                <img src="/assets/images/Testimonials/test.png" alt="Anita Sharma" />
+                                <div class="video-card__play-btn">
+                                    <i class="fas fa-play"></i>
+                                </div>
+                                <div class="video-card__duration">1:25</div>
+                            </div>
+                        </a>
+                        <div class="video-card__content">
+                            <div class="video-card__user">
+                                <div class="video-card__avatar">
+                                    <i class="fas fa-user"></i>
+                                </div>
+                                <div class="video-card__user-info">
+                                    <h4>Sneha Kapoor</h4>
+                                    <p>Parent of Aadhya</p>
+                                </div>
+                            </div>
+                            <div class="video-card__quote">
+                                <i class="fas fa-quote-right"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-4 col-lg-6 wow fadeInUp" data-wow-delay="100ms">
+                    <div class="video-card">
+                        <a href="https://youtube.com/shorts/XyuauoCURA8?si=T1gyv2hELsYkEnIJ" class="video-popup">
+                            <div class="video-card__thumbnail">
+                                <img src="/assets/images/Testimonials/test.png" alt="Anita Sharma" />
+                                <div class="video-card__play-btn">
+                                    <i class="fas fa-play"></i>
+                                </div>
+                                <div class="video-card__duration">1:25</div>
+                            </div>
+                        </a>
+                        <div class="video-card__content">
+                            <div class="video-card__user">
+                                <div class="video-card__avatar">
+                                    <i class="fas fa-user"></i>
+                                </div>
+                                <div class="video-card__user-info">
+                                    <h4>Pooja Menon</h4>
+                                    <p>Parent of Vivaan</p>
+                                </div>
+                            </div>
+                            <div class="video-card__quote">
+                                <i class="fas fa-quote-right"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
 
             {/* Video CTA Bar */}
