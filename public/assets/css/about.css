@@ -44,7 +44,7 @@ section {
 
 .testimonial-one__single {
     padding: 50px !important; /* Premium consistent padding */
-    background-color: transparent !important;
+    background-color: var(--eduvers-white) !important;
     border-radius: var(--eduvers-bdr-radius) !important;
     box-shadow: 0 15px 45px rgba(0, 0, 0, 0.1) !important;
     transition: all 0.3s ease !important;
